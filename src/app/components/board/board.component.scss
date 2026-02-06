@@ -88,13 +88,19 @@
 .board {
   display: flex;
   flex-direction: column;
-  /* 8 squares * 64px = 512px content width */
+  /* 8 squares * size */
+  --square-size: 64px;
   width: max-content;
   border: 12px solid var(--board-border);
   border-radius: 4px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(0, 0, 0, 0.5);
   user-select: none;
   background-color: var(--board-border);
+
+  @media (max-width: 600px) {
+    --square-size: 42px;
+    border-width: 8px;
+  }
 }
 
 .rank {
@@ -102,15 +108,14 @@
 }
 
 .square {
-  width: 64px;
-  height: 64px;
+  width: var(--square-size);
+  height: var(--square-size);
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   cursor: pointer;
-  font-size: 3.5rem;
-  /* Adjusted for 64px box */
+  font-size: calc(var(--square-size) * 0.8);
   transition: background-color 0.2s ease;
 }
 
