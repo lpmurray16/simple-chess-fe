@@ -1,0 +1,46 @@
+// Colors
+:root {
+    // Palette
+    --wizard-bg: #1e1e1e;
+    --wizard-parchment: #f0e6d2; // For text on dark or light backgrounds if needed, but we go dark mode
+    --wizard-gold: #d4af37;
+    --wizard-gold-dim: #aa8c2c;
+    --wizard-red: #740001;
+    --wizard-green: #1a472a;
+    --wizard-blue: #0e1a40;
+    --wizard-border: #4a3c31;
+
+    // Semantic mappings
+    --primary-color: var(--wizard-gold);
+    --primary-hover: var(--wizard-gold-dim);
+    --text-color: #e0e0e0;
+    --text-muted: #a0a0a0;
+    --text-dark: #1a1a1a; // For buttons/light areas
+    --error-color: #ff6b6b;
+    --background-dark: var(--wizard-bg);
+    --background-panel: #2d2d2d;
+    --border-color: var(--wizard-gold);
+
+    // Board Colors - Wood/Old Style
+    --board-border: #3e2723; // Dark wood
+    --square-light: #dcc7a0; // Aged parchment/wood
+    --square-dark: #5d4037; // Dark mahogany
+    --square-selected: rgba(212, 175, 55, 0.6); // Gold glow overlay
+    --valid-move-indicator: rgba(26, 71, 42, 0.5); // Magic green glow dot
+
+    // Piece Colors
+    --piece-white: #f5f5f5; // Ivory
+    --piece-white-shadow: #000;
+    --piece-black: #000; // Obsidian
+
+    // Status Colors
+    --status-your-turn: #4caf50; // Bright green for visibility, or maybe gold?
+
+    // UI Colors
+    --header-bg: #121212;
+    --modal-overlay: rgba(0, 0, 0, 0.8);
+
+    // Fonts
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Cormorant Garamond', serif;
+}

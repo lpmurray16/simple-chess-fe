@@ -1,59 +1,71 @@
 # SimpleChessFe
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.3.
+This is a simple two-player online chess game built with Angular and PocketBase.
 
-## Development server
+## Backend Setup (PocketBase)
 
-To start a local development server, run:
+This project requires a PocketBase backend.
 
-```bash
-ng serve
-```
+### 1. Create Collection
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+You need to create a `game_state` collection in your PocketBase instance (`https://simple-chess-pb-backend.fly.dev`).
 
-## Code scaffolding
+You can do this in two ways:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+#### Option A: Import Schema (Recommended)
 
-```bash
-ng generate component component-name
-```
+1. Go to your PocketBase Admin Dashboard -> **Settings** -> **Import collections**.
+2. Upload or copy the content of the `pb_schema.json` file found in the root of this repository.
+3. Click **Import**.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+#### Option B: Manual Setup
 
-```bash
-ng generate --help
-```
+Create a collection named `game_state` with the following fields:
 
-## Building
+- `fen`: **Text**
+- `pgn`: **Text**
+- `status`: **Select** (Max Select: 1). Values:
+  - `New`
+  - `White Move`
+  - `Black Move`
+  - `In Check`
+  - `Checkmate`
+  - `Stalemate`
+- `white_player`: **Relation** (Single, Collection: `users`)
+- `black_player`: **Relation** (Single, Collection: `users`)
 
-To build the project run:
+**API Rules**:
+Set the following API Rules for the `game_state` collection to allow authenticated access:
 
-```bash
-ng build
-```
+- **List/Search Rule**: `@request.auth.id != ""`
+- **View Rule**: `@request.auth.id != ""`
+- **Create Rule**: `@request.auth.id != ""`
+- **Update Rule**: `@request.auth.id != ""`
+- **Delete Rule**: (Leave empty or null for admin only)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### 2. Users Collection
 
-## Running unit tests
+The default `users` collection is sufficient. Ensure **Registration** is enabled (it is by default).
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+## Frontend Setup
 
-```bash
-ng test
-```
+1. Install dependencies:
 
-## Running end-to-end tests
+   ```bash
+   npm install
+   ```
 
-For end-to-end (e2e) testing, run:
+2. Run the development server:
 
-```bash
-ng e2e
-```
+   ```bash
+   npm start
+   ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+3. Open `http://localhost:4200` in your browser.
 
-## Additional Resources
+## How to Play
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. Open the application in two different browsers (or use Incognito mode).
+2. **Player 1**: Sign up and Login. Click "Join as White".
+3. **Player 2**: Sign up and Login. Click "Join as Black".
+4. Moves will be synchronized in real-time.

@@ -1,0 +1,308 @@
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.status {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  font-family: var(--font-heading);
+  letter-spacing: 1px;
+}
+
+.your-turn {
+  color: var(--status-your-turn);
+  font-weight: bold;
+  text-shadow: 0 0 10px var(--status-your-turn);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    text-shadow: 0 0 5px var(--status-your-turn);
+  }
+
+  50% {
+    text-shadow: 0 0 20px var(--status-your-turn);
+  }
+
+  100% {
+    text-shadow: 0 0 5px var(--status-your-turn);
+  }
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 450px;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: var(--background-panel);
+  border: 1px solid var(--wizard-gold-dim);
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+
+  &.opponent {
+    margin-bottom: 15px;
+  }
+
+  &.self {
+    margin-top: 15px;
+  }
+
+  .player-avatar {
+    font-size: 2rem;
+    margin-right: 15px;
+    width: 40px;
+    text-align: center;
+    color: var(--wizard-gold);
+  }
+
+  .player-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .player-name {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    color: var(--text-color);
+  }
+
+  .player-color {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  /* 8 squares * 64px = 512px content width */
+  width: max-content;
+  border: 12px solid var(--board-border);
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  background-color: var(--board-border);
+}
+
+.rank {
+  display: flex;
+}
+
+.square {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  font-size: 3.5rem;
+  /* Adjusted for 64px box */
+  transition: background-color 0.2s ease;
+}
+
+/* Removed media query for small screens since size is fixed */
+
+.light {
+  background-color: var(--square-light);
+  // Add wood texture noise if possible, or just color
+}
+
+.dark {
+  background-color: var(--square-dark);
+}
+
+.selected {
+  background-color: var(--square-selected) !important;
+  box-shadow: inset 0 0 10px var(--wizard-gold);
+}
+
+.valid-move::after {
+  content: '';
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  background: radial-gradient(circle, var(--valid-move-indicator) 0%, rgba(0, 0, 0, 0) 70%);
+  border-radius: 50%;
+  box-shadow: 0 0 5px var(--valid-move-indicator);
+}
+
+.piece {
+  z-index: 1;
+  filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.5));
+}
+
+.white-piece {
+  color: var(--piece-white);
+  // Stroke effect using text-shadow
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+.black-piece {
+  color: var(--piece-black);
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.5); // Slight white glow to separate from dark squares
+}
+
+.controls {
+  margin-top: 20px;
+  width: 100%;
+  max-width: 450px;
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .claim-buttons {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+
+    button {
+      flex: 1;
+    }
+  }
+
+  .btn-reset {
+    width: 100%;
+    margin-top: 5px;
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+
+    &:hover {
+      background-color: rgba(255, 107, 107, 0.1);
+      box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+    }
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--modal-overlay);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--background-panel);
+  padding: 30px;
+  border: 2px solid var(--wizard-gold);
+  border-radius: 8px;
+  text-align: center;
+  color: var(--text-color);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  max-width: 90%;
+
+  h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--wizard-gold-dim);
+    padding-bottom: 10px;
+  }
+}
+
+.promotion-pieces {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+  justify-content: center;
+
+  button {
+    font-size: 2.5rem;
+    background: var(--square-light);
+    border: 2px solid var(--board-border);
+    border-radius: 4px;
+    cursor: pointer;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+      border-color: var(--wizard-gold);
+      box-shadow: 0 0 10px var(--wizard-gold);
+    }
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--background-body);
+  z-index: 9999;
+  color: var(--wizard-gold);
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid var(--wizard-gold-dim);
+    border-top: 6px solid var(--wizard-gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px var(--wizard-gold-dim);
+  }
+
+  &.error-overlay {
+    color: #ff6b6b;
+
+    .error-text {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .error-detail {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
