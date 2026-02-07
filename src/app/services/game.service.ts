@@ -234,6 +234,12 @@ export class GameService {
     return this.chess.turn();
   }
 
+  gameHasNotStarted(): boolean {
+    const current = this.gameStateSubject.value;
+    if (!current) return true;
+    return current.status === 'New';
+  }
+
   isMyTurn(): boolean {
     const current = this.gameStateSubject.value;
     if (!current) return false;
