@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @use 'variables' as *;
 @use 'buttons';
+@use 'spacings';
+@use 'flex';
 
 html,
 body {

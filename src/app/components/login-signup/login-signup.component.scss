@@ -1,0 +1,38 @@
+.login-container {
+  max-width: 300px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.error {
+  color: var(--error-color);
+  margin-top: 10px;
+}
+
+h1 {
+  font-family: var(--font-heading);
+  color: var(--wizard-gold);
+}
+
+label {
+  font-family: var(--font-body);
+}

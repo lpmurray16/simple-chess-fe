@@ -2,13 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GameService, GameState } from '../../services/game.service';
 import { AuthService } from '../../services/auth.service';
+import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
 import { Chess, Piece, Square } from 'chess.js';
 
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss'],
 })
@@ -88,12 +89,12 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   get whitePlayerName(): string {
     const player = this.gameState?.expand?.white_player;
-    return player?.name || player?.username || player?.email || 'Waiting for White Wizard...';
+    return player?.name || player?.username || player?.email || 'No Player Found Yet';
   }
 
   get blackPlayerName(): string {
     const player = this.gameState?.expand?.black_player;
-    return player?.name || player?.username || player?.email || 'Waiting for Black Wizard...';
+    return player?.name || player?.username || player?.email || 'No Player Found Yet';
   }
 
   // Helper to map visual index to actual square coordinate

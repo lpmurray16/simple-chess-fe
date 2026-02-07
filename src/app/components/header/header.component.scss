@@ -1,0 +1,38 @@
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.status {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-family: var(--font-heading);
+    letter-spacing: 1px;
+}
+
+.your-turn {
+    color: var(--status-your-turn);
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--status-your-turn);
+    animation: pulse 2s infinite;
+}
+
+.auth-warning {
+    color: #ff6b6b;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+@keyframes pulse {
+    0% {
+        text-shadow: 0 0 5px var(--status-your-turn);
+    }
+
+    50% {
+        text-shadow: 0 0 20px var(--status-your-turn);
+    }
+
+    100% {
+        text-shadow: 0 0 5px var(--status-your-turn);
+    }
+}

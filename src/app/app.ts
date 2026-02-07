@@ -1,44 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BoardComponent } from './components/board/board.component';
+import { LoginSignupComponent } from './components/login-signup/login-signup.component';
 import { AuthService } from './services/auth.service';
+import { GameService } from './services/game.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, BoardComponent],
+  imports: [CommonModule, FormsModule, BoardComponent, LoginSignupComponent],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App implements OnInit {
-  email = '';
-  password = '';
-  isLoginMode = true;
-  errorMsg = '';
+  menuOpen = false;
+  gameService = inject(GameService);
 
   constructor(public auth: AuthService) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  async onSubmit() {
-    this.errorMsg = '';
-    try {
-      if (this.isLoginMode) {
-        await this.auth.login(this.email, this.password);
-      } else {
-        await this.auth.signup(this.email, this.password);
-        await this.auth.login(this.email, this.password);
-      }
-    } catch (err: any) {
-      this.errorMsg = err.message || 'Authentication failed';
-    }
-  }
-
-  toggleMode() {
-    this.isLoginMode = !this.isLoginMode;
-    this.errorMsg = '';
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
   }
 
   logout() {

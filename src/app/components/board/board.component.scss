@@ -7,39 +7,6 @@
   margin: 0 auto;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.status {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-  font-family: var(--font-heading);
-  letter-spacing: 1px;
-}
-
-.your-turn {
-  color: var(--status-your-turn);
-  font-weight: bold;
-  text-shadow: 0 0 10px var(--status-your-turn);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    text-shadow: 0 0 5px var(--status-your-turn);
-  }
-
-  50% {
-    text-shadow: 0 0 20px var(--status-your-turn);
-  }
-
-  100% {
-    text-shadow: 0 0 5px var(--status-your-turn);
-  }
-}
-
 .player-info {
   display: flex;
   align-items: center;
@@ -56,6 +23,18 @@
     margin-bottom: 15px;
   }
 
+  &.black {
+    color: var(--piece-white);
+    background-color: var(--wizard-bg);
+    border: 2px solid var(--piece-white);
+  }
+
+  &.white {
+    color: var(--piece-black);
+    background-color: var(--piece-white);
+    border: 2px solid var(--piece-black);
+  }
+
   &.self {
     margin-top: 15px;
   }
@@ -65,7 +44,6 @@
     margin-right: 15px;
     width: 40px;
     text-align: center;
-    color: var(--wizard-gold);
   }
 
   .player-details {
@@ -76,7 +54,6 @@
   .player-name {
     font-family: var(--font-heading);
     font-size: 1.2rem;
-    color: var(--text-color);
   }
 
   .player-color {

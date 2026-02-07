@@ -1,32 +1,27 @@
 <div class="app-container">
   @if (auth.currentUser$ | async; as user) {
-  <header>
-    <span>Logged in as: {{ user.email }}</span>
-    <button class="btn btn-sm btn-default" (click)="logout()">Logout</button>
+  <header class="d-flex justify-content-between align-items-center">
+    <h2 class="title">Wizard's Chess</h2>
+
+    @if (gameService.gameState$ | async; as gameState) {
+    <p class="game-status">{{ gameState.status }}</p>
+    }
+
+    <button class="hamburger-btn" (click)="toggleMenu()" [class.open]="menuOpen" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="user-menu" [class.open]="menuOpen">
+      <span class="user-email">{{ user.email }}</span>
+      <button class="btn btn-sm btn-default logout-btn" (click)="logout()">Logout</button>
+    </div>
   </header>
   <main>
     <app-board></app-board>
   </main>
   } @else {
-  <div class="login-container">
-    <h1>Chess Login</h1>
-    <form (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" [(ngModel)]="email" name="email" required>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" [(ngModel)]="password" name="password" required>
-      </div>
-      <button type="submit" class="btn btn-primary btn-block">{{ isLoginMode ? 'Login' : 'Sign Up' }}</button>
-      @if (errorMsg) {
-      <p class="error">{{ errorMsg }}</p>
-      }
-    </form>
-    <button class="btn btn-link" (click)="toggleMode()">
-      {{ isLoginMode ? 'Need an account? Sign Up' : 'Have an account? Login' }}
-    </button>
-  </div>
+  <app-login-signup></app-login-signup>
   }
 </div>

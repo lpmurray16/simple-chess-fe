@@ -2,7 +2,7 @@
   @if (gameService.isLoading$ | async) {
   <div class="loading-overlay">
     <div class="spinner"></div>
-    <p>Summoning the board...</p>
+    <p>Accio, board...</p>
   </div>
   } @else if (errorMessage) {
   <div class="loading-overlay error-overlay">
@@ -11,25 +11,10 @@
     <button class="btn btn-default" (click)="reset()">Try Again</button>
   </div>
   } @else {
-  <div class="header">
-    <h2>Wizard's Chess</h2>
-    @if (gameState) {
-    <div class="status">
-      <p>{{ gameState.status }}</p>
-      @if (gameService.isMyTurn()) {
-      <p class="your-turn">It is your turn, Wizard!</p>
-      }
-    </div>
-    }
-    @if (!auth.currentUserId) {
-    <div class="auth-warning">
-      Please log in to cast spells.
-    </div>
-    }
-  </div>
+  <app-header></app-header>
 
   <!-- Top Player Info -->
-  <div class="player-info opponent">
+  <div class="player-info opponent" [class.black]="orientation === 'black'" [class.white]="orientation === 'white'">
     <div class="player-avatar">
       {{ orientation === 'white' ? '♚' : '♔' }}
     </div>
@@ -66,7 +51,7 @@
   </div>
 
   <!-- Bottom Player Info -->
-  <div class="player-info self">
+  <div class="player-info self" [class.black]="orientation === 'black'" [class.white]="orientation === 'white'">
     <div class="player-avatar">
       {{ orientation === 'white' ? '♔' : '♚' }}
     </div>
@@ -85,7 +70,7 @@
         <button class="btn btn-default" (click)="join('white')" [disabled]="gameState.white_player">Claim White</button>
         <button class="btn btn-default" (click)="join('black')" [disabled]="gameState.black_player">Claim Black</button>
       </div>
-      <button class="btn btn-default btn-reset" (click)="reset()">Reset Realm</button>
+      <button class="btn btn-default btn-reset" (click)="reset()">Reset Game</button>
     </div>
     }
   </div>

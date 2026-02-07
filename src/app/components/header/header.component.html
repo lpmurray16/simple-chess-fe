@@ -1,0 +1,14 @@
+<div class="header">
+  @if (gameService.gameState$ | async; as gameState) {
+  <div class="status">
+    @if (gameService.isMyTurn()) {
+    <p class="your-turn">It is your turn, dude!</p>
+    }
+  </div>
+  }
+  @if (!auth.currentUserId) {
+  <div class="auth-warning">
+    Please log in to cast spells.
+  </div>
+  }
+</div>
