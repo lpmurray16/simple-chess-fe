@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { AuthService } from './auth.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Chess, Square, Move } from 'chess.js';
 
 export type GameStatus =
@@ -36,6 +36,8 @@ export class GameService {
 
   private errorSubject = new BehaviorSubject<string | null>(null);
   public error$ = this.errorSubject.asObservable();
+
+  public capture$ = new Subject<void>();
 
   private chess = new Chess();
 
@@ -104,7 +106,7 @@ export class GameService {
     }
   }
 
-  private updateLocalState(record: any) {
+  private updateLocalState(record: any, shouldCheckCapture: boolean = false) {
     console.log('Updating local state with record:', record);
     const state: GameState = {
       id: record.id,
@@ -115,6 +117,9 @@ export class GameService {
       pgn: record.pgn,
       status: record.status,
     };
+
+    // Store old PGN for capture detection
+    const oldPgn = this.chess.pgn();
 
     // Sync internal chess logic FIRST
     // We prioritize PGN to preserve move history and repetition state
@@ -131,6 +136,19 @@ export class GameService {
         this.chess.load(state.fen);
       } catch (fenError) {
         console.error('Invalid FEN loaded', fenError);
+      }
+    }
+
+    // Check for capture if this is an update (not initial load)
+    if (shouldCheckCapture) {
+      const newPgn = this.chess.pgn();
+      if (newPgn !== oldPgn) {
+        const history = this.chess.history({ verbose: true });
+        const lastMove = history[history.length - 1];
+        if (lastMove && lastMove.captured) {
+          console.log('Capture detected!');
+          this.capture$.next();
+        }
       }
     }
 
@@ -160,6 +178,10 @@ export class GameService {
     try {
       const move = this.chess.move({ from, to, promotion });
       if (!move) throw new Error('Invalid move');
+
+      if (move.captured) {
+        this.capture$.next();
+      }
     } catch (e) {
       throw new Error('Invalid move');
     }

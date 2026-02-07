@@ -1,0 +1,36 @@
+.overlay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  /* Semi-transparent black background */
+  z-index: 9999;
+  /* High z-index to be on top of everything */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  /* Allow clicks to pass through if needed, but usually overlays block interaction. 
+                          If we want to block interaction, remove this. 
+                          The user said "pop onto a players screen", usually implies blocking or at least visual dominance.
+                          Let's keep pointer-events: none so it doesn't interrupt game flow if they want to click something else? 
+                          Actually, 5 seconds is short, but maybe blocking is better to force attention.
+                          Let's remove pointer-events: none for now to ensure it's seen as an overlay. */
+}
+
+.overlay-content {
+  max-width: 80%;
+  max-height: 80%;
+  position: relative;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    display: block;
+    /* Remove bottom space */
+  }
+}
