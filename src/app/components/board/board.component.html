@@ -18,17 +18,17 @@
     <div class="player-avatar">
       {{ orientation === 'white' ? '♚' : '♔' }}
     </div>
-    <div class="player-details">
+    <div class="player-details d-flex align-items-center justify-content-between">
       <span class="player-name">
         {{ orientation === 'white' ? blackPlayerName : whitePlayerName }}
       </span>
        @if(!gameService.isMyTurn()){
         <span class="pulsing-green-circle"></span>
       }
-      <span class="player-color">{{ orientation === 'white' ? 'Black' : 'White' }}</span>
     </div>
   </div>
 
+  <!-- Game Board -->
   <div class="board">
     @for (rank of displayedBoard; track i; let i = $index) {
     <div class="rank">
@@ -58,7 +58,7 @@
     <div class="player-avatar">
       {{ orientation === 'white' ? '♔' : '♚' }}
     </div>
-    <div class="player-details">
+    <div class="player-details d-flex align-items-center justify-content-between">
       <span class="player-name">
         {{ orientation === 'white' ? 'White' : 'Black' }}: {{ orientation === 'white' ? whitePlayerName :
         blackPlayerName }}
