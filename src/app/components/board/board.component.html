@@ -19,7 +19,7 @@
       {{ orientation === 'white' ? '♚' : '♔' }}
     </div>
     <div class="player-details d-flex align-items-center justify-content-between">
-      <span class="player-name">
+      <span class="player-name mr-3">
         {{ orientation === 'white' ? blackPlayerName : whitePlayerName }}
       </span>
        @if(!gameService.isMyTurn()){
@@ -59,7 +59,7 @@
       {{ orientation === 'white' ? '♔' : '♚' }}
     </div>
     <div class="player-details d-flex align-items-center justify-content-between">
-      <span class="player-name">
+      <span class="player-name mr-3">
         {{ orientation === 'white' ? 'White' : 'Black' }}: {{ orientation === 'white' ? whitePlayerName :
         blackPlayerName }}
       </span>
