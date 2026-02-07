@@ -14,7 +14,7 @@
   <app-header></app-header>
 
   <!-- Top Player Info -->
-  <div class="player-info opponent" [class.black]="orientation === 'black'" [class.white]="orientation === 'white'">
+  <div class="player-info opponent" [class.black]="orientation === 'white'" [class.white]="orientation === 'black'">
     <div class="player-avatar">
       {{ orientation === 'white' ? '♚' : '♔' }}
     </div>

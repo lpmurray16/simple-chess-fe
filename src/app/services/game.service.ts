@@ -51,23 +51,26 @@ export class GameService {
     // We assume there is only one game for simplicity as requested.
     // If no game exists, we might need to create one, or wait for one.
 
-    // First, try to fetch the existing game
-    await this.fetchOrCreateGame();
+    // First, try to fetch the existing game (blocking load)
+    await this.fetchOrCreateGame(false);
 
     // Subscribe to changes
     this.auth.client.collection('game_state').subscribe('*', (e) => {
       if (e.action === 'update' || e.action === 'create') {
         // We need to fetch the full record again to get expanded relations
-        // because the realtime event might not have them fully expanded or we want consistency
-        this.fetchOrCreateGame();
+        // This is a background update, so don't show full page loader
+        this.fetchOrCreateGame(true);
       }
     });
   }
 
-  private async fetchOrCreateGame() {
-    console.log('Fetching game state...');
-    this.isLoadingSubject.next(true);
-    this.errorSubject.next(null);
+  private async fetchOrCreateGame(isBackground: boolean = false) {
+    console.log(`Fetching game state (background: ${isBackground})...`);
+
+    if (!isBackground) {
+      this.isLoadingSubject.next(true);
+      this.errorSubject.next(null);
+    }
 
     try {
       const list = await this.auth.client.collection('game_state').getList(1, 1, {
@@ -78,7 +81,9 @@ export class GameService {
       console.log('Game state fetched:', list);
 
       if (list.items.length > 0) {
-        this.updateLocalState(list.items[0] as any);
+        const item = list.items[0];
+        console.log('Expanded data:', item.expand);
+        this.updateLocalState(item as any);
       } else {
         // Create a new game if none exists
         console.log('No game found, creating new one...');
@@ -86,12 +91,16 @@ export class GameService {
       }
     } catch (err: any) {
       console.error('Error fetching game:', err);
-      this.errorSubject.next(err.message || 'Failed to load game realm');
+      if (!isBackground) {
+        this.errorSubject.next(err.message || 'Failed to load game realm');
+      }
     } finally {
-      this.ngZone.run(() => {
-        console.log('Setting isLoading to false');
-        this.isLoadingSubject.next(false);
-      });
+      if (!isBackground) {
+        this.ngZone.run(() => {
+          console.log('Setting isLoading to false');
+          this.isLoadingSubject.next(false);
+        });
+      }
     }
   }
 
