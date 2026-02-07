@@ -22,6 +22,9 @@
       <span class="player-name">
         {{ orientation === 'white' ? blackPlayerName : whitePlayerName }}
       </span>
+       @if(!gameService.isMyTurn()){
+        <span class="pulsing-green-circle"></span>
+      }
       <span class="player-color">{{ orientation === 'white' ? 'Black' : 'White' }}</span>
     </div>
   </div>
@@ -60,6 +63,9 @@
         {{ orientation === 'white' ? 'White' : 'Black' }}: {{ orientation === 'white' ? whitePlayerName :
         blackPlayerName }}
       </span>
+      @if(gameService.isMyTurn()){
+        <span class="pulsing-green-circle"></span>
+      }
     </div>
   </div>
 
