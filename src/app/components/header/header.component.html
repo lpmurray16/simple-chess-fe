@@ -2,7 +2,11 @@
   @if (gameService.gameState$ | async; as gameState) {
   <div class="status">
     @if (gameService.isMyTurn()) {
+    @if (gameService.isInCheck()) {
+    <p class="your-turn in-check">You are in check!</p>
+    } @else {
     <p class="your-turn">It is your turn, dude!</p>
+    }
     }
   </div>
   }

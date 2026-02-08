@@ -15,6 +15,12 @@
     font-weight: bold;
     text-shadow: 0 0 10px var(--status-your-turn);
     animation: pulse 2s infinite;
+
+    &.in-check {
+        color: #ff4d4d;
+        text-shadow: 0 0 15px #ff4d4d;
+        animation: urgent-pulse 1s infinite;
+    }
 }
 
 .auth-warning {
@@ -34,5 +40,22 @@
 
     100% {
         text-shadow: 0 0 5px var(--status-your-turn);
+    }
+}
+
+@keyframes urgent-pulse {
+    0% {
+        transform: scale(1);
+        text-shadow: 0 0 10px #ff4d4d;
+    }
+
+    50% {
+        transform: scale(1.05);
+        text-shadow: 0 0 25px #ff4d4d;
+    }
+
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 10px #ff4d4d;
     }
 }

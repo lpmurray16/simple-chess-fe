@@ -14,7 +14,8 @@
   <app-header></app-header>
 
   <!-- Top Player Info -->
-  <div class="player-info opponent" [class.black]="orientation === 'white'" [class.white]="orientation === 'black'">
+  <div class="player-info opponent" [class.black]="orientation === 'white'" 
+  [class.white]="orientation === 'black'" [class.active]="!gameService.isMyTurn() && !gameService.gameHasNotStarted()">
     <div class="player-avatar">
       {{ orientation === 'white' ? '♚' : '♔' }}
     </div>
@@ -22,8 +23,8 @@
       <span class="player-name mr-3">
         {{ orientation === 'white' ? blackPlayerName : whitePlayerName }}
       </span>
-       @if(!gameService.isMyTurn() && !gameService.gameHasNotStarted()){
-        <span class="pulsing-green-circle"></span>
+      @if(!gameService.isMyTurn() && !gameService.gameHasNotStarted()){
+      <span class="pulsing-green-circle"></span>
       }
     </div>
   </div>
@@ -54,7 +55,8 @@
   </div>
 
   <!-- Bottom Player Info -->
-  <div class="player-info self" [class.black]="orientation === 'black'" [class.white]="orientation === 'white'">
+  <div class="player-info self" [class.black]="orientation === 'black'" [class.white]="orientation === 'white'" 
+  [class.active]="gameService.isMyTurn() && !gameService.gameHasNotStarted()">
     <div class="player-avatar">
       {{ orientation === 'white' ? '♔' : '♚' }}
     </div>
@@ -64,7 +66,7 @@
         blackPlayerName }}
       </span>
       @if(gameService.isMyTurn() && !gameService.gameHasNotStarted()){
-        <span class="pulsing-green-circle"></span>
+      <span class="pulsing-green-circle"></span>
       }
     </div>
   </div>
@@ -72,10 +74,12 @@
   <div class="controls">
     @if (gameState) {
     <div class="control-group">
-      <div class="claim-buttons">
-        <button class="btn btn-default" (click)="join('white')" [disabled]="gameState.white_player">Claim White</button>
-        <button class="btn btn-default" (click)="join('black')" [disabled]="gameState.black_player">Claim Black</button>
+      @if(!gameService.bothPlayersHaveBeenClaimed()){
+        <div class="claim-buttons">
+        <button class="btn btn-white" (click)="join('white')" [disabled]="gameState.white_player">Claim White</button>
+        <button class="btn btn-black" (click)="join('black')" [disabled]="gameState.black_player">Claim Black</button>
       </div>
+      }
       <button class="btn btn-default btn-reset" (click)="reset()">Reset Game</button>
     </div>
     }
@@ -93,6 +97,20 @@
         <button class="btn btn-lg" (click)="onPromotionSelect('n')">♘</button>
       </div>
       <button class="btn btn-default" (click)="cancelPromotion()">Cancel</button>
+    </div>
+  </div>
+  }
+
+  <!-- Reset Confirmation Modal -->
+  @if (showResetConfirmation) {
+  <div class="modal-overlay">
+    <div class="modal">
+      <h3>Reset Board?</h3>
+      <p>Are you sure you want to reset the game? This will clear the board for everyone.</p>
+      <div class="modal-actions">
+        <button class="btn btn-danger" (click)="confirmReset()">Reset</button>
+        <button class="btn btn-default" (click)="cancelReset()">Cancel</button>
+      </div>
     </div>
   </div>
   }

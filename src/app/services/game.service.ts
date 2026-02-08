@@ -279,4 +279,13 @@ export class GameService {
     if (current.black_player === userId) return 'b';
     return null;
   }
+
+  isInCheck(): boolean {
+    return this.chess.inCheck();
+  }
+
+  bothPlayersHaveBeenClaimed(): boolean {
+    const current = this.gameStateSubject.value;
+    return !!(current?.white_player && current?.black_player);
+  }
 }

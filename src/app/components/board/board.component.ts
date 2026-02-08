@@ -19,6 +19,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   selectedSquare: Square | null = null;
   validMoves: string[] = [];
   promotionMove: { from: string; to: string } | null = null;
+  showResetConfirmation = false;
 
   errorMessage: string | null = null;
 
@@ -193,7 +194,16 @@ export class BoardComponent implements OnInit, OnDestroy {
     await this.gameService.joinGame(color);
   }
 
-  async reset() {
+  reset() {
+    this.showResetConfirmation = true;
+  }
+
+  async confirmReset() {
+    this.showResetConfirmation = false;
     await this.gameService.resetGame();
+  }
+
+  cancelReset() {
+    this.showResetConfirmation = false;
   }
 }

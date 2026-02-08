@@ -74,6 +74,40 @@
   }
 }
 
+.btn-white {
+  background-color: var(--piece-white);
+  color: var(--piece-black);
+  border-color: var(--piece-black);
+
+  &:hover:not(:disabled) {
+    background-color: #fff;
+    box-shadow: 0 0 10px var(--piece-white);
+  }
+}
+
+.btn-black {
+  background-color: var(--piece-black);
+  color: var(--piece-white);
+  border-color: var(--piece-white);
+
+  &:hover:not(:disabled) {
+    background-color: #333;
+    box-shadow: 0 0 10px var(--piece-white);
+  }
+}
+
+.btn-danger {
+  background-color: transparent;
+  border-color: var(--error-color);
+  color: var(--error-color);
+
+  &:hover:not(:disabled) {
+    background-color: var(--error-color);
+    color: white;
+    box-shadow: 0 0 10px var(--error-color);
+  }
+}
+
 // Button Sizes
 .btn-block {
   display: block;
