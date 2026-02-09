@@ -40,15 +40,43 @@ export class GameService {
   public capture$ = new Subject<void>();
 
   private chess = new Chess();
+  private isSubscribed = false;
 
   constructor(
     private auth: AuthService,
     private ngZone: NgZone,
   ) {
+    // Attempt initial load
     this.initGameSubscription();
+
+    // Re-initialize game if user logs in
+    this.auth.currentUser$.subscribe((user) => {
+      if (user) {
+        this.initGameSubscription();
+      } else {
+        // Clear state on logout
+        this.gameStateSubject.next(null);
+        this.isSubscribed = false;
+        this.auth.client
+          .collection('game_state')
+          .unsubscribe('*')
+          .catch(() => {});
+      }
+    });
   }
 
   private async initGameSubscription() {
+    // Wait for user to be logged in before initializing game
+    if (!this.auth.isValid) {
+      console.log('User not logged in, skipping game initialization');
+      return;
+    }
+
+    if (this.isSubscribed) return;
+    this.isSubscribed = true;
+
+    console.log('Initializing game subscription...');
+
     // Subscribe to the games collection
     // We assume there is only one game for simplicity as requested.
     // If no game exists, we might need to create one, or wait for one.
@@ -282,6 +310,14 @@ export class GameService {
     if (current.white_player === userId) return 'w';
     if (current.black_player === userId) return 'b';
     return null;
+  }
+
+  isSpectator(): boolean {
+    const current = this.gameStateSubject.value;
+    if (!current) return false;
+    const userId = this.auth.currentUserId;
+    if (!userId) return true; // Not logged in is also a spectator
+    return current.white_player !== userId && current.black_player !== userId;
   }
 
   isInCheck(): boolean {

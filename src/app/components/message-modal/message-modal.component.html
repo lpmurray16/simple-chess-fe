@@ -1,0 +1,27 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Arcane Messages</h2>
+      <button class="close-btn" (click)="onClose()">&times;</button>
+    </div>
+
+    <div class="messages-list">
+      @for (msg of (messageService.messages$ | async); track msg.id) {
+      <div class="message-item" [class.own-message]="msg.from_user === auth.currentUserId">
+        <div class="message-info">
+          <span class="sender">{{ msg.expand?.from_user?.name || 'Unknown Wizard' }}</span>
+          <span class="date">{{ msg.created | date:'short' }}</span>
+        </div>
+        <div class="message-text">{{ msg.message }}</div>
+      </div>
+      } @empty {
+      <div class="no-messages">No messages in the ether...</div>
+      }
+    </div>
+
+    <div class="message-input">
+      <input type="text" [(ngModel)]="newMessage" (keyup.enter)="send()" placeholder="Type your spell..." />
+      <button (click)="send()">Send</button>
+    </div>
+  </div>
+</div>

@@ -73,6 +73,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.board = chess.board(); // 8x8, Rank 8 at index 0
   }
 
+  get isSpectator(): boolean {
+    return this.gameService.isSpectator();
+  }
+
   get orientation(): 'white' | 'black' {
     return this.gameService.getPlayerColor() === 'b' ? 'black' : 'white';
   }
@@ -191,6 +195,10 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   async join(color: 'white' | 'black') {
+    if (!this.auth.currentUserId) {
+      this.auth.requestLogin();
+      return;
+    }
     await this.gameService.joinGame(color);
   }
 

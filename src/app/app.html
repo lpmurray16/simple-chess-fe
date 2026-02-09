@@ -1,5 +1,4 @@
 <div class="app-container">
-  @if (auth.currentUser$ | async; as user) {
   <header class="d-flex justify-content-between align-items-center">
     <h2 class="title">Wizard's Chess</h2>
 
@@ -7,22 +6,49 @@
     <p class="game-status">{{ gameState.status }}</p>
     }
 
-    <button class="hamburger-btn" (click)="toggleMenu()" [class.open]="menuOpen" aria-label="Toggle menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+    <div class="header-actions d-flex align-items-center">
+      @if (auth.currentUser$ | async; as user) {
+      <div class="notification-wrapper me-3" (click)="toggleMessages()">
+        <i class="fa-solid fa-bell bell-icon"></i>
+        @if (messageService.hasNewMessages$ | async) {
+        <span class="indicator"></span>
+        }
+      </div>
 
-    <div class="user-menu" [class.open]="menuOpen">
-      <span class="user-email">{{ user.email }}</span>
-      <button class="btn btn-sm btn-default logout-btn" (click)="logout()">Logout</button>
+      <button class="hamburger-btn" (click)="toggleMenu()" [class.open]="menuOpen" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <div class="user-menu" [class.open]="menuOpen">
+        <span class="user-email">{{ user.email }}</span>
+        <button class="btn btn-sm btn-default logout-btn" (click)="logout()">Logout</button>
+      </div>
+      } @else {
+      <button class="btn btn-primary btn-sm" (click)="toggleAuth()">Login / Signup</button>
+      }
     </div>
   </header>
+
   <main>
+    <app-header></app-header>
     <app-board></app-board>
     <app-overlay></app-overlay>
+
+    @if (showAuth && !(auth.currentUser$ | async)) {
+    <div class="auth-overlay">
+      <div class="auth-modal">
+        @if (auth.currentUser$ | async) {
+        <button class="close-btn" (click)="toggleAuth()">&times;</button>
+        }
+        <app-login-signup></app-login-signup>
+      </div>
+    </div>
+    }
+
+    @if (showMessages) {
+    <app-message-modal (close)="showMessages = false"></app-message-modal>
+    }
   </main>
-  } @else {
-  <app-login-signup></app-login-signup>
-  }
 </div>

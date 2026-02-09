@@ -10,8 +10,12 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<any | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
+  private requestLoginSubject = new BehaviorSubject<boolean>(false);
+  public requestLogin$ = this.requestLoginSubject.asObservable();
+
   constructor() {
     this.pb = new PocketBase('https://simple-chess-pb-backend.fly.dev');
+    this.pb.autoCancellation(false);
     this.pb.authStore.onChange((token, model) => {
       this.currentUserSubject.next(model);
     });
@@ -47,5 +51,9 @@ export class AuthService {
 
   logout() {
     this.pb.authStore.clear();
+  }
+
+  requestLogin() {
+    this.requestLoginSubject.next(true);
   }
 }

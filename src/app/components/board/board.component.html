@@ -13,9 +13,23 @@
   } @else {
   <app-header></app-header>
 
+  @if (isSpectator) {
+  <div class="spectator-banner">
+    <div class="d-flex align-items-center justify-content-center gap-2">
+      <i class="fas fa-eye"></i>
+      <span>You are in View-Only mode</span>
+      @if (!auth.currentUserId) {
+      <button class="btn btn-sm btn-link p-0 text-white underline" (click)="auth.requestLogin()">
+        (Login to join)
+      </button>
+      }
+    </div>
+  </div>
+  }
+
   <!-- Top Player Info -->
-  <div class="player-info opponent" [class.black]="orientation === 'white'" 
-  [class.white]="orientation === 'black'" [class.active]="!gameService.isMyTurn() && !gameService.gameHasNotStarted()">
+  <div class="player-info opponent" [class.black]="orientation === 'white'" [class.white]="orientation === 'black'"
+    [class.active]="!gameService.isMyTurn() && !gameService.gameHasNotStarted()">
     <div class="player-avatar">
       {{ orientation === 'white' ? '♚' : '♔' }}
     </div>
@@ -30,7 +44,7 @@
   </div>
 
   <!-- Game Board -->
-  <div class="board">
+  <div class="board" [class.spectator-mode]="isSpectator">
     @for (rank of displayedBoard; track i; let i = $index) {
     <div class="rank">
       @for (cell of rank; track j; let j = $index) {
@@ -55,8 +69,8 @@
   </div>
 
   <!-- Bottom Player Info -->
-  <div class="player-info self" [class.black]="orientation === 'black'" [class.white]="orientation === 'white'" 
-  [class.active]="gameService.isMyTurn() && !gameService.gameHasNotStarted()">
+  <div class="player-info self" [class.black]="orientation === 'black'" [class.white]="orientation === 'white'"
+    [class.active]="gameService.isMyTurn() && !gameService.gameHasNotStarted()">
     <div class="player-avatar">
       {{ orientation === 'white' ? '♔' : '♚' }}
     </div>
@@ -75,14 +89,17 @@
     @if (gameState) {
     <div class="control-group">
       @if(!gameService.bothPlayersHaveBeenClaimed()){
-        <div class="claim-buttons">
+      <div class="claim-buttons">
         <button class="btn btn-white" (click)="join('white')" [disabled]="gameState.white_player">Claim White</button>
         <button class="btn btn-black" (click)="join('black')" [disabled]="gameState.black_player">Claim Black</button>
       </div>
       }
       <div class="d-flex gap-2 md-flex-wrap flex-grow-1">
-        <button class="btn btn-default btn-reset flex-grow-1" (click)="reset()">Reset</button>  
-        <button class="btn btn-primary btn-refresh flex-grow-1" (click)="refresh()">Refresh <i class="fas fa-arrows-rotate"></i></button>  
+        @if (!isSpectator) {
+        <button class="btn btn-default btn-reset flex-grow-1" (click)="reset()">Reset</button>
+        }
+        <button class="btn btn-primary btn-refresh flex-grow-1" (click)="refresh()">Refresh <i
+            class="fas fa-arrows-rotate"></i></button>
       </div>
     </div>
     }
