@@ -165,8 +165,6 @@
   }
 
   .btn-reset {
-    width: 100%;
-    margin-top: 5px;
     border-color: #ff6b6b;
     color: #ff6b6b;
 
@@ -295,6 +293,13 @@
     }
   }
 }
+
+.btn-refresh:hover {
+  .fa-arrows-rotate {
+    animation: spin 0.5s linear;
+  }
+}
+
 
 @keyframes spin {
   0% {

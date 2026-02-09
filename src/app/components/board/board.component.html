@@ -80,7 +80,10 @@
         <button class="btn btn-black" (click)="join('black')" [disabled]="gameState.black_player">Claim Black</button>
       </div>
       }
-      <button class="btn btn-default btn-reset" (click)="reset()">Reset Game</button>
+      <div class="d-flex gap-2 md-flex-wrap flex-grow-1">
+        <button class="btn btn-default btn-reset flex-grow-1" (click)="reset()">Reset</button>  
+        <button class="btn btn-primary btn-refresh flex-grow-1" (click)="refresh()">Refresh <i class="fas fa-arrows-rotate"></i></button>  
+      </div>
     </div>
     }
   </div>

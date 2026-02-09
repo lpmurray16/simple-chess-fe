@@ -106,6 +106,10 @@ export class GameService {
     }
   }
 
+  async refreshGame() {
+    await this.fetchOrCreateGame(true);
+  }
+
   private updateLocalState(record: any, shouldCheckCapture: boolean = false) {
     console.log('Updating local state with record:', record);
     const state: GameState = {

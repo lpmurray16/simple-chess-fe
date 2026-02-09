@@ -36,6 +36,12 @@ $spacers: (
   flex-wrap: wrap !important;
 }
 
+.md-flex-wrap {
+  @media (max-width: 768px) {
+    flex-wrap: wrap !important;
+  }
+}
+
 .flex-nowrap {
   flex-wrap: nowrap !important;
 }

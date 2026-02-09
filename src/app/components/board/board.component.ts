@@ -198,6 +198,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.showResetConfirmation = true;
   }
 
+  refresh() {
+    this.gameService.refreshGame();
+  }
+
   async confirmReset() {
     this.showResetConfirmation = false;
     await this.gameService.resetGame();
