@@ -24,6 +24,9 @@ export class OverlayComponent implements OnInit, OnDestroy {
     'https://metoobubba16.sirv.com/chess_gifs/b-rook-v-w-castle.gif',
     'https://metoobubba16.sirv.com/chess_gifs/2-rooks-w-wins.gif',
     'https://metoobubba16.sirv.com/chess_gifs/w-knight-explodes.gif',
+    'https://metoobubba16.sirv.com/chess_gifs/w-glowing-w-hit.gif',
+    'https://metoobubba16.sirv.com/chess_gifs/b-glowing-hits-w.gif',
+    'https://metoobubba16.sirv.com/chess_gifs/w-destroys-b.gif',
   ];
 
   constructor(
