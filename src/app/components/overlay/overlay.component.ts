@@ -4,74 +4,77 @@ import { GameService } from '../../services/game.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-overlay',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './overlay.component.html',
-  styleUrls: ['./overlay.component.scss'],
+    selector: 'app-overlay',
+    standalone: true,
+    imports: [CommonModule],
+    templateUrl: './overlay.component.html',
+    styleUrls: ['./overlay.component.scss'],
 })
 export class OverlayComponent implements OnInit, OnDestroy {
-  isVisible = false;
-  currentGifUrl: string = '';
-  private captureSub: Subscription | null = null;
-  private timer: any = null;
+    isVisible = false;
+    currentGifUrl: string = '';
+    private captureSub: Subscription | null = null;
+    private timer: any = null;
 
-  private gifOptions = [
-    'https://metoobubba16.sirv.com/chess_gifs/hp-rook-explodes.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/hp-ron-goes-down.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/hp-red-white-clip.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/b-rook-v-w-rook.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/b-rook-v-w-castle.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/2-rooks-w-wins.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/w-knight-explodes.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/w-glowing-w-hit.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/b-glowing-hits-w.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/w-destroys-b.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/w-canon-b.gif',
-    'https://metoobubba16.sirv.com/chess_gifs/b-weird-sword.gif',
-  ];
+    private gifOptions = [
+        'https://metoobubba16.sirv.com/chess_gifs/hp-rook-explodes.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/hp-ron-goes-down.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/hp-red-white-clip.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/b-rook-v-w-rook.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/b-rook-v-w-castle.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/2-rooks-w-wins.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/w-knight-explodes.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/w-glowing-w-hit.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/b-glowing-hits-w.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/w-destroys-b.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/w-canon-b.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/b-weird-sword.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/b-knight-axe-explodes.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/b-knight-laser-beam.gif',
+        'https://metoobubba16.sirv.com/chess_gifs/w-knight-shrinks-b-pawn.gif',
+    ];
 
-  constructor(
-    private gameService: GameService,
-    private cdr: ChangeDetectorRef,
-  ) {}
+    constructor(
+        private gameService: GameService,
+        private cdr: ChangeDetectorRef,
+    ) {}
 
-  ngOnInit() {
-    this.captureSub = this.gameService.capture$.subscribe(() => {
-      this.triggerOverlay();
-    });
-  }
-
-  ngOnDestroy() {
-    this.captureSub?.unsubscribe();
-    this.clearTimer();
-  }
-
-  triggerOverlay() {
-    // Pick random GIF
-    const randomIndex = Math.floor(Math.random() * this.gifOptions.length);
-    this.currentGifUrl = this.gifOptions[randomIndex];
-
-    this.isVisible = true;
-    this.cdr.detectChanges();
-    this.clearTimer();
-
-    // Hide after 5 seconds
-    this.timer = setTimeout(() => {
-      this.isVisible = false;
-      this.cdr.detectChanges();
-    }, 7000);
-  }
-
-  closeOverlay() {
-    this.isVisible = false;
-    this.clearTimer();
-  }
-
-  private clearTimer() {
-    if (this.timer) {
-      clearTimeout(this.timer);
-      this.timer = null;
+    ngOnInit() {
+        this.captureSub = this.gameService.capture$.subscribe(() => {
+            this.triggerOverlay();
+        });
     }
-  }
+
+    ngOnDestroy() {
+        this.captureSub?.unsubscribe();
+        this.clearTimer();
+    }
+
+    triggerOverlay() {
+        // Pick random GIF
+        const randomIndex = Math.floor(Math.random() * this.gifOptions.length);
+        this.currentGifUrl = this.gifOptions[randomIndex];
+
+        this.isVisible = true;
+        this.cdr.detectChanges();
+        this.clearTimer();
+
+        // Hide after 5 seconds
+        this.timer = setTimeout(() => {
+            this.isVisible = false;
+            this.cdr.detectChanges();
+        }, 7000);
+    }
+
+    closeOverlay() {
+        this.isVisible = false;
+        this.clearTimer();
+    }
+
+    private clearTimer() {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
+    }
 }
