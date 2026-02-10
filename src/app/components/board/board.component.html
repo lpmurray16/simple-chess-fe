@@ -8,7 +8,7 @@
   <div class="loading-overlay error-overlay">
     <p class="error-text">Failed to summon the board.</p>
     <p class="error-detail">{{ errorMessage }}</p>
-    <button class="btn btn-default" (click)="reset()">Try Again</button>
+    <button class="btn btn-default" (click)="gameService.refreshGame()">Try Again</button>
   </div>
   } @else {
   <app-header></app-header>
@@ -95,9 +95,6 @@
       </div>
       }
       <div class="d-flex gap-2 md-flex-wrap flex-grow-1">
-        @if (!isSpectator) {
-        <button class="btn btn-default btn-reset flex-grow-1" (click)="reset()">Reset</button>
-        }
         <button class="btn btn-primary btn-refresh flex-grow-1" (click)="refresh()">Refresh <i
             class="fas fa-arrows-rotate"></i></button>
       </div>
@@ -121,18 +118,5 @@
   </div>
   }
 
-  <!-- Reset Confirmation Modal -->
-  @if (showResetConfirmation) {
-  <div class="modal-overlay">
-    <div class="modal">
-      <h3>Reset Board?</h3>
-      <p>Are you sure you want to reset the game? This will clear the board for everyone.</p>
-      <div class="modal-actions">
-        <button class="btn btn-danger" (click)="confirmReset()">Reset</button>
-        <button class="btn btn-default" (click)="cancelReset()">Cancel</button>
-      </div>
-    </div>
-  </div>
-  }
   }
 </div>

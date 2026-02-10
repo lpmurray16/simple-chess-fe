@@ -69,7 +69,7 @@ header {
 }
 
 .hamburger-btn {
-  display: none;
+  display: block;
   background: none;
   border: none;
   cursor: pointer;
@@ -99,48 +99,36 @@ header {
 }
 
 .user-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 250px;
+  height: 100vh;
+  background-color: var(--background-panel);
+  border-left: 2px solid var(--wizard-gold);
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  gap: 15px;
+  transition: right 0.3s ease-in-out;
+  z-index: 1001;
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.7);
+
+  &.open {
+    right: 0;
+  }
 
   .user-email {
     font-family: var(--font-body);
     color: var(--wizard-gold);
-  }
-}
-
-@media (max-width: 600px) {
-  .hamburger-btn {
-    display: block;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
   }
 
-  .user-menu {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 250px;
-    height: 100vh;
-    background-color: var(--background-panel);
-    border-left: 2px solid var(--wizard-gold);
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: right 0.3s ease-in-out;
-    z-index: 1001;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.7);
-
-    &.open {
-      right: 0;
-    }
-
-    .user-email {
-      margin-bottom: 20px;
-      font-size: 1.2rem;
-    }
-
-    .logout-btn {
-      width: 80%;
-    }
+  .reset-btn,
+  .logout-btn {
+    width: 80%;
+    margin-bottom: 10px;
   }
 }
 
