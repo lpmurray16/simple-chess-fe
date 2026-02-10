@@ -314,9 +314,8 @@ export class GameService {
 
   isSpectator(): boolean {
     const current = this.gameStateSubject.value;
-    if (!current) return false;
+    if (!current) return true;
     const userId = this.auth.currentUserId;
-    if (!userId) return true; // Not logged in is also a spectator
     return current.white_player !== userId && current.black_player !== userId;
   }
 

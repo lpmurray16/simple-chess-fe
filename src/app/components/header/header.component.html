@@ -1,19 +1,19 @@
 <div class="header">
-  @if (gameService.gameState$ | async; as gameState) {
-  <div class="status">
-    @if (gameService.isMyTurn()) {
-    @if (gameService.isInCheck()) {
-    <p class="your-turn in-check">You are in check!</p>
-    } @else {
-    <p class="your-turn">It is your turn, dude!</p>
+    @if (gameService.gameState$ | async; as gameState) {
+    <div class="status">
+        @if (gameService.isMyTurn()) {
+        @if (gameService.isInCheck()) {
+        <p class="your-turn in-check">You are in check!</p>
+        } @else {
+        <p class="your-turn">It is your turn, dude!</p>
+        }
+        }
+    </div>
     }
-    }
-  </div>
-  }
 
-  @if (!auth.currentUserId) {
-  <div class="auth-warning">
-    Please log in to view or play.
-  </div>
-  }
+    @if (!auth.currentUserId) {
+    <div class="auth-warning">
+        Please log in to view or play.
+    </div>
+    }
 </div>
