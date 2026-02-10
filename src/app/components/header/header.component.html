@@ -1,9 +1,16 @@
 <div class="header">
     @if (gameService.gameState$ | async; as gameState) {
     <div class="status">
-        @if (gameService.isMyTurn()) {
+        @if (gameService.isCheckmate()) {
+        <p class="game-over">Game Over: Checkmate!</p>
+        <p> Winner: {{ gameService.getWinner() }}</p>
+        } @else if (gameService.isStalemate()) {
+        <p class="game-over">Game Over: Stalemate</p>
+        } @else if (gameService.isGameOver()) {
+        <p class="game-over">Game Over: Draw</p>
+        } @else if (gameService.isMyTurn()) {
         @if (gameService.isInCheck()) {
-        <p class="your-turn in-check">You are in check!</p>
+        <p class="your-turn in-check">!!! You are in check !!!</p>
         } @else {
         <p class="your-turn">It is your turn, dude!</p>
         }

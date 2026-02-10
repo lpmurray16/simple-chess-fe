@@ -9,7 +9,8 @@ export type GameStatus =
     | 'Black Move'
     | 'In Check'
     | 'Checkmate'
-    | 'Stalemate';
+    | 'Stalemate'
+    | 'Draw';
 
 export interface GameState {
     id: string;
@@ -230,6 +231,8 @@ export class GameService {
             status = 'Checkmate';
         } else if (this.chess.isStalemate()) {
             status = 'Stalemate';
+        } else if (this.chess.isDraw()) {
+            status = 'Draw';
         } else if (this.chess.inCheck()) {
             status = 'In Check';
         }
@@ -326,6 +329,34 @@ export class GameService {
 
     isInCheck(): boolean {
         return this.chess.inCheck();
+    }
+
+    isCheckmate(): boolean {
+        return this.chess.isCheckmate();
+    }
+
+    isStalemate(): boolean {
+        return this.chess.isStalemate();
+    }
+
+    isGameOver(): boolean {
+        return this.chess.isGameOver();
+    }
+
+    getWinner(): string | null {
+        if (!this.chess.isCheckmate()) return null;
+
+        const loserColor = this.chess.turn(); // 'w' or 'b'
+        const currentState = this.gameStateSubject.value;
+        if (!currentState) return null;
+
+        if (loserColor === 'w') {
+            // Black wins
+            return currentState.expand?.black_player?.username || 'Black';
+        } else {
+            // White wins
+            return currentState.expand?.white_player?.username || 'White';
+        }
     }
 
     bothPlayersHaveBeenClaimed(): boolean {

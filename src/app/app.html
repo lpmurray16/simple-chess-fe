@@ -9,7 +9,7 @@
         <div class="header-actions d-flex align-items-center">
             @if (auth.currentUser$ | async; as user) {
             <div class="notification-wrapper me-3" (click)="toggleMessages()">
-                <i class="fa-solid fa-bell bell-icon"></i>
+                <i class="fa-solid fa-bell bell-icon mr-3"></i>
                 @if (messageService.hasNewMessages$ | async) {
                 <span class="indicator"></span>
                 }

@@ -1,11 +1,10 @@
 .header {
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 1rem;
 
   .status {
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     .your-turn {
       color: #3e8a13;
@@ -19,6 +18,17 @@
         color: #ff4d4d;
         font-weight: bold;
       }
+    }
+
+    .game-over {
+      color: #ffd700;
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     }
   }
 
