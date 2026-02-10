@@ -193,6 +193,12 @@ export class BoardComponent implements OnInit, OnDestroy {
         return this.validMoves.includes(this.getSquareFromVisual(visualRowIndex, visualColIndex));
     }
 
+    isSquareLastMove(visualRowIndex: number, visualColIndex: number): boolean {
+        if (!this.gameState?.lastMove || !this.gameService.isMyTurn()) return false;
+        const square = this.getSquareFromVisual(visualRowIndex, visualColIndex);
+        return square === this.gameState.lastMove.from || square === this.gameState.lastMove.to;
+    }
+
     async join(color: 'white' | 'black') {
         if (!this.auth.currentUserId) {
             this.auth.requestLogin();

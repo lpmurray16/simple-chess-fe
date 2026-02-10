@@ -50,6 +50,7 @@
       @for (cell of rank; track j; let j = $index) {
       <div class="square" [class.light]="(i + j) % 2 === 0" [class.dark]="(i + j) % 2 !== 0"
         [class.selected]="isSquareSelected(i, j)" [class.valid-move]="isSquareValidMove(i, j)"
+        [class.last-move]="isSquareLastMove(i, j)"
         (click)="onSquareClick(i, j)">
 
         @if (cell) {

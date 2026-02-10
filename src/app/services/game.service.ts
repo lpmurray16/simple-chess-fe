@@ -23,6 +23,7 @@ export interface GameState {
     };
     pgn: string; // Store PGN for history
     status: GameStatus;
+    lastMove?: { from: string; to: string } | null;
 }
 
 @Injectable({
@@ -160,6 +161,15 @@ export class GameService {
             if (state.pgn) {
                 console.log('Loading PGN:', state.pgn);
                 this.chess.loadPgn(state.pgn);
+
+                // Extract last move from history after loading PGN
+                const history = this.chess.history({ verbose: true });
+                if (history.length > 0) {
+                    const lastMove = history[history.length - 1];
+                    state.lastMove = { from: lastMove.from, to: lastMove.to };
+                } else {
+                    state.lastMove = null;
+                }
             } else {
                 throw new Error('No PGN available');
             }
