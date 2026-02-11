@@ -69,7 +69,8 @@
 
   &.black {
     color: var(--piece-white);
-    background-color: var(--wizard-bg);
+    background-color: #000;
+    ;
     border: 2px solid var(--piece-white);
   }
 
@@ -119,9 +120,17 @@
     }
   }
 
+  &.players-turn {
+    border: 10px solid var(--status-your-turn);
+  }
+
   @media (max-width: 600px) {
     --square-size: 42px;
     border-width: 8px;
+
+    &.players-turn {
+      border: 8px solid var(--status-your-turn);
+    }
   }
 }
 
@@ -139,6 +148,10 @@
   cursor: pointer;
   font-size: calc(var(--square-size) * 0.8);
   transition: background-color 0.2s ease;
+
+  &.valid-move > .piece {
+    animation: pulse-red 2s infinite ease-in-out;
+  }
 }
 
 /* Removed media query for small screens since size is fixed */
@@ -167,7 +180,7 @@
   position: absolute;
   width: 30%;
   height: 30%;
-  background: radial-gradient( circle, rgba(13, 235, 91, 0.91) 0%, rgba(153, 219, 57, 0.33) 70%);
+  background: radial-gradient(circle, rgba(13, 235, 91, 0.91) 0%, rgba(153, 219, 57, 0.33) 70%);
   border-radius: 50%;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
@@ -367,6 +380,20 @@
   border-radius: 50%;
   background-color: var(--status-your-turn);
   animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse-red {
+  0% {
+    color: #ff6b6b;
+  }
+
+  50% {
+    color: #dd1818;
+  }
+
+  100% {
+    color: #ff6b6b;
+  }
 }
 
 @keyframes pulse {

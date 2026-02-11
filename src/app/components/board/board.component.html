@@ -44,7 +44,7 @@
   </div>
 
   <!-- Game Board -->
-  <div class="board" [class.spectator-mode]="isSpectator">
+  <div class="board" [class.spectator-mode]="isSpectator" [class.players-turn]="gameService.isMyTurn()">
     @for (rank of displayedBoard; track i; let i = $index) {
     <div class="rank">
       @for (cell of rank; track j; let j = $index) {
@@ -95,7 +95,7 @@
         <button class="btn btn-black" (click)="join('black')" [disabled]="gameState.black_player">Claim Black</button>
       </div>
       }
-      <div class="d-flex gap-2 md-flex-wrap flex-grow-1">
+      <div class="d-flex gap-2 md-flex-wrap flex-grow-1 mt-4">
         <button class="btn btn-primary btn-refresh flex-grow-1" (click)="refresh()">Refresh <i
             class="fas fa-arrows-rotate"></i></button>
       </div>
