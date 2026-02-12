@@ -1,4 +1,4 @@
-<div class="modal-overlay" (click)="onClose()">
+<div class="modal-overlay" [class.keyboard-open]="isFocused" (click)="onClose()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2>Messages</h2>
@@ -15,12 +15,13 @@
         <div class="message-text">{{ msg.message }}</div>
       </div>
       } @empty {
-      <div class="no-messages">No messages in the ether...</div>
+      <div class="no-messages">There ain't shit here...</div>
       }
     </div>
 
     <div class="message-input">
-      <input type="text" [(ngModel)]="newMessage" (keyup.enter)="send()" placeholder="Type here..." />
+      <input type="text" [(ngModel)]="newMessage" (keyup.enter)="send()" (focus)="isFocused = true"
+        (blur)="isFocused = false" placeholder="Type here..." />
       <button (click)="send()">Send</button>
     </div>
   </div>

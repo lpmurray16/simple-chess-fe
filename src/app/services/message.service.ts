@@ -82,6 +82,18 @@ export class MessageService {
     this.fetchMessages();
   }
 
+  async clearAllMessages() {
+    try {
+      const records = await this.auth.client.collection('messages').getFullList();
+      for (const record of records) {
+        await this.auth.client.collection('messages').delete(record.id);
+      }
+      this.fetchMessages();
+    } catch (error) {
+      console.error('Error clearing messages:', error);
+    }
+  }
+
   async sendMessage(text: string) {
     try {
       await this.auth.client.collection('messages').create({

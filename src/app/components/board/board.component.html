@@ -1,123 +1,124 @@
 <div class="game-container">
-  @if (gameService.isLoading$ | async) {
-  <div class="loading-overlay">
-    <div class="spinner"></div>
-    <p>Accio, board...</p>
-  </div>
-  } @else if (errorMessage) {
-  <div class="loading-overlay error-overlay">
-    <p class="error-text">Failed to summon the board.</p>
-    <p class="error-detail">{{ errorMessage }}</p>
-    <button class="btn btn-default" (click)="gameService.refreshGame()">Try Again</button>
-  </div>
-  } @else {
-  <app-header></app-header>
-
-  @if (isSpectator) {
-  <div class="spectator-banner">
-    <div class="d-flex align-items-center justify-content-center gap-2">
-      <i class="fas fa-eye"></i>
-      <span>You are in View-Only mode</span>
-      @if (!auth.currentUserId) {
-      <button class="btn btn-sm btn-link p-0 text-white underline" (click)="auth.requestLogin()">
-        (Login to join)
-      </button>
-      }
+    @if (gameService.isLoading$ | async) {
+    <div class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Accio, board...</p>
     </div>
-  </div>
-  }
-
-  <!-- Top Player Info -->
-  <div class="player-info opponent" [class.black]="orientation === 'white'" [class.white]="orientation === 'black'"
-    [class.active]="!gameService.isMyTurn() && !gameService.gameHasNotStarted()">
-    <div class="player-avatar">
-      {{ orientation === 'white' ? '♚' : '♔' }}
+    } @else if (errorMessage) {
+    <div class="loading-overlay error-overlay">
+        <p class="error-text">Failed to summon the board.</p>
+        <p class="error-detail">{{ errorMessage }}</p>
+        <button class="btn btn-default" (click)="gameService.refreshGame()">Try Again</button>
     </div>
-    <div class="player-details d-flex align-items-center justify-content-between">
-      <span class="player-name mr-3">
-        {{ orientation === 'white' ? blackPlayerName : whitePlayerName }}
-      </span>
-      @if(!gameService.isMyTurn() && !gameService.gameHasNotStarted()){
-      <span class="pulsing-green-circle"></span>
-      }
-    </div>
-  </div>
+    } @else {
+    <app-header></app-header>
 
-  <!-- Game Board -->
-  <div class="board" [class.spectator-mode]="isSpectator" [class.players-turn]="gameService.isMyTurn()">
-    @for (rank of displayedBoard; track i; let i = $index) {
-    <div class="rank">
-      @for (cell of rank; track j; let j = $index) {
-      <div class="square" [class.light]="(i + j) % 2 === 0" [class.dark]="(i + j) % 2 !== 0"
-        [class.selected]="isSquareSelected(i, j)" [class.valid-move]="isSquareValidMove(i, j)"
-        [class.last-move]="isSquareLastMove(i, j)"
-        (click)="onSquareClick(i, j)">
-
-        @if (cell) {
-        <span class="piece" [class.white-piece]="cell.color === 'w'" [class.black-piece]="cell.color === 'b'">
-          {{ getPieceIcon(cell) }}
-        </span>
-        }
-
-        <!-- Dot for valid move on empty square -->
-        @if (isSquareValidMove(i, j) && !cell) {
-        <div class="move-indicator"></div>
-        }
-      </div>
-      }
+    @if (isSpectator) {
+    <div class="spectator-banner">
+        <div class="d-flex align-items-center justify-content-center gap-2">
+            <i class="fas fa-eye"></i>
+            <span>You are in View-Only mode</span>
+            @if (!auth.currentUserId) {
+            <button class="btn btn-sm btn-link p-0 text-white underline" (click)="auth.requestLogin()">
+                (Login to join)
+            </button>
+            }
+        </div>
     </div>
     }
-  </div>
 
-  <!-- Bottom Player Info -->
-  <div class="player-info self" [class.black]="orientation === 'black'" [class.white]="orientation === 'white'"
-    [class.active]="gameService.isMyTurn() && !gameService.gameHasNotStarted()">
-    <div class="player-avatar">
-      {{ orientation === 'white' ? '♔' : '♚' }}
+    <!-- Top Player Info -->
+    <div class="player-info opponent" [class.black]="orientation === 'white'" [class.white]="orientation === 'black'"
+        [class.active]="!gameService.isMyTurn() && !gameService.gameHasNotStarted()">
+        <div class="player-avatar">
+            {{ orientation === 'white' ? '♚' : '♔' }}
+        </div>
+        <div class="player-details d-flex align-items-center justify-content-between">
+            <span class="player-name mr-3">
+                {{ orientation === 'white' ? blackPlayerName : whitePlayerName }}
+            </span>
+            @if(!gameService.isMyTurn() && !gameService.gameHasNotStarted()){
+            <span class="pulsing-green-circle"></span>
+            }
+        </div>
     </div>
-    <div class="player-details d-flex align-items-center justify-content-between">
-      <span class="player-name mr-3">
-        {{ orientation === 'white' ? 'White' : 'Black' }}: {{ orientation === 'white' ? whitePlayerName :
-        blackPlayerName }}
-      </span>
-      @if(gameService.isMyTurn() && !gameService.gameHasNotStarted()){
-      <span class="pulsing-green-circle"></span>
-      }
-    </div>
-  </div>
 
-  <div class="controls">
-    @if (gameState) {
-    <div class="control-group">
-      @if(!gameService.bothPlayersHaveBeenClaimed()){
-      <div class="claim-buttons">
-        <button class="btn btn-white" (click)="join('white')" [disabled]="gameState.white_player">Claim White</button>
-        <button class="btn btn-black" (click)="join('black')" [disabled]="gameState.black_player">Claim Black</button>
-      </div>
-      }
-      <div class="d-flex gap-2 md-flex-wrap flex-grow-1 mt-4">
-        <button class="btn btn-primary btn-refresh flex-grow-1" (click)="refresh()">Refresh <i
-            class="fas fa-arrows-rotate"></i></button>
-      </div>
+    <!-- Game Board -->
+    <div class="board" [class.spectator-mode]="isSpectator" [class.players-turn]="gameService.isMyTurn()">
+        @for (rank of displayedBoard; track i; let i = $index) {
+        <div class="rank">
+            @for (cell of rank; track j; let j = $index) {
+            <div class="square" [class.light]="(i + j) % 2 === 0" [class.dark]="(i + j) % 2 !== 0"
+                [class.selected]="isSquareSelected(i, j)" [class.valid-move]="isSquareValidMove(i, j)"
+                [class.last-move]="isSquareLastMove(i, j)" (click)="onSquareClick(i, j)">
+
+                @if (cell) {
+                <span class="piece" [class.white-piece]="cell.color === 'w'" [class.black-piece]="cell.color === 'b'">
+                    {{ getPieceIcon(cell) }}
+                </span>
+                }
+
+                <!-- Dot for valid move on empty square -->
+                @if (isSquareValidMove(i, j) && !cell) {
+                <div class="move-indicator"></div>
+                }
+            </div>
+            }
+        </div>
+        }
+    </div>
+
+    <!-- Bottom Player Info -->
+    <div class="player-info self" [class.black]="orientation === 'black'" [class.white]="orientation === 'white'"
+        [class.active]="gameService.isMyTurn() && !gameService.gameHasNotStarted()">
+        <div class="player-avatar">
+            {{ orientation === 'white' ? '♔' : '♚' }}
+        </div>
+        <div class="player-details d-flex align-items-center justify-content-between">
+            <span class="player-name mr-3">
+                {{ orientation === 'white' ? 'White' : 'Black' }}: {{ orientation === 'white' ? whitePlayerName :
+                blackPlayerName }}
+            </span>
+            @if(gameService.isMyTurn() && !gameService.gameHasNotStarted()){
+            <span class="pulsing-green-circle"></span>
+            }
+        </div>
+    </div>
+
+    <div class="controls">
+        @if (gameState) {
+        <div class="control-group">
+            @if(!gameService.bothPlayersHaveBeenClaimed()){
+            <div class="claim-buttons">
+                <button class="btn btn-white" (click)="join('white')" [disabled]="gameState.white_player">Claim
+                    White</button>
+                <button class="btn btn-black" (click)="join('black')" [disabled]="gameState.black_player">Claim
+                    Black</button>
+            </div>
+            }
+            <div class="d-flex gap-2 md-flex-wrap flex-grow-1 mt-4">
+                <button class="btn btn-primary btn-refresh flex-grow-1" (click)="refresh()">Refresh <i
+                        class="fas fa-arrows-rotate"></i></button>
+            </div>
+        </div>
+        }
+    </div>
+
+    <!-- Promotion Modal -->
+    @if (promotionMove) {
+    <div class="modal-overlay">
+        <div class="modal">
+            <h3>Promote Pawn</h3>
+            <div class="promotion-pieces">
+                <button class="btn btn-lg" (click)="onPromotionSelect('q')">♕</button>
+                <button class="btn btn-lg" (click)="onPromotionSelect('r')">♖</button>
+                <button class="btn btn-lg" (click)="onPromotionSelect('b')">♗</button>
+                <button class="btn btn-lg" (click)="onPromotionSelect('n')">♘</button>
+            </div>
+            <button class="btn btn-default" (click)="cancelPromotion()">Cancel</button>
+        </div>
     </div>
     }
-  </div>
 
-  <!-- Promotion Modal -->
-  @if (promotionMove) {
-  <div class="modal-overlay">
-    <div class="modal">
-      <h3>Promote Pawn</h3>
-      <div class="promotion-pieces">
-        <button class="btn btn-lg" (click)="onPromotionSelect('q')">♕</button>
-        <button class="btn btn-lg" (click)="onPromotionSelect('r')">♖</button>
-        <button class="btn btn-lg" (click)="onPromotionSelect('b')">♗</button>
-        <button class="btn btn-lg" (click)="onPromotionSelect('n')">♘</button>
-      </div>
-      <button class="btn btn-default" (click)="cancelPromotion()">Cancel</button>
-    </div>
-  </div>
-  }
-
-  }
+    }
 </div>

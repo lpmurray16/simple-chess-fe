@@ -25,6 +25,14 @@
                 <span class="user-email mb-4">{{ user.email }}</span>
                 <button class="btn btn-sm btn-default logout-btn" (click)="logout()">Logout</button>
                 <button class="btn btn-sm btn-danger reset-btn mt-4" (click)="resetGame()">Reset Game</button>
+                @if (isAdmin) {
+                <button class="btn btn-sm btn-danger mt-4" (click)="clearMessages()">
+                    <i class="fa-solid fa-trash-can mr-2"></i> Clear Messages
+                </button>
+                }
+                <button class="btn btn-sm btn-default history-btn mt-4" (click)="toggleHistory()">
+                    <i class="fa-solid fa-clock-rotate-left mr-2"></i> Game History
+                </button>
             </div>
             } @else {
             <button class="btn btn-primary btn-sm" (click)="toggleAuth()">Login / Signup</button>
@@ -49,6 +57,10 @@
 
         @if (showMessages) {
         <app-message-modal (close)="showMessages = false"></app-message-modal>
+        }
+
+        @if (showHistory) {
+        <app-game-history-modal (close)="toggleHistory()"></app-game-history-modal>
         }
 
         @if (showResetConfirmation) {

@@ -253,6 +253,49 @@ export class GameService {
             pgn: this.chess.pgn(),
             status: status,
         });
+
+        // Log game history if the game ended
+        if (this.chess.isGameOver()) {
+            await this.logGameHistory(status);
+        }
+    }
+
+    private async logGameHistory(status: GameStatus) {
+        const currentState = this.gameStateSubject.value;
+        if (!currentState) return;
+
+        let winner: string | null = null;
+        let loser: string | null = null;
+        let end_game_status: 'Checkmate' | 'Stalemate' | 'Other' = 'Other';
+
+        if (status === 'Checkmate') {
+            end_game_status = 'Checkmate';
+            const loserColor = this.chess.turn(); // 'w' or 'b'
+            if (loserColor === 'w') {
+                winner = currentState.black_player;
+                loser = currentState.white_player;
+            } else {
+                winner = currentState.white_player;
+                loser = currentState.black_player;
+            }
+        } else if (status === 'Stalemate') {
+            end_game_status = 'Stalemate';
+            // No winner/loser for stalemate
+        } else {
+            end_game_status = 'Other';
+            // For other draws, winner/loser are null
+        }
+
+        try {
+            await this.auth.client.collection('game_history').create({
+                winner: winner,
+                loser: loser,
+                end_game_status: end_game_status,
+            });
+            console.log('Game history logged successfully');
+        } catch (error) {
+            console.error('Failed to log game history:', error);
+        }
     }
 
     async resetGame() {

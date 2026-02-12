@@ -5,6 +5,7 @@ import { BoardComponent } from './components/board/board.component';
 import { LoginSignupComponent } from './components/login-signup/login-signup.component';
 import { OverlayComponent } from './components/overlay/overlay.component';
 import { MessageModalComponent } from './components/message-modal/message-modal.component';
+import { GameHistoryModalComponent } from './components/game-history-modal/game-history-modal.component';
 import { AuthService } from './services/auth.service';
 import { GameService } from './services/game.service';
 import { MessageService } from './services/message.service';
@@ -19,6 +20,7 @@ import { MessageService } from './services/message.service';
         LoginSignupComponent,
         OverlayComponent,
         MessageModalComponent,
+        GameHistoryModalComponent,
     ],
     templateUrl: './app.html',
     styleUrl: './app.scss',
@@ -27,9 +29,14 @@ export class App implements OnInit {
     menuOpen = false;
     showAuth = !inject(AuthService).isValid;
     showMessages = false;
+    showHistory = false;
     showResetConfirmation = false;
     gameService = inject(GameService);
     messageService = inject(MessageService);
+
+    get isAdmin() {
+        return this.auth.currentUserId === 'x3eeoz1leai6l4h';
+    }
 
     constructor(public auth: AuthService) {
         // If user logs in, hide auth overlay
@@ -70,6 +77,13 @@ export class App implements OnInit {
         }
     }
 
+    toggleHistory() {
+        this.showHistory = !this.showHistory;
+        if (this.showHistory) {
+            this.menuOpen = false;
+        }
+    }
+
     logout() {
         this.auth.logout();
         this.menuOpen = false;
@@ -83,6 +97,13 @@ export class App implements OnInit {
     async confirmReset() {
         this.showResetConfirmation = false;
         await this.gameService.resetGame();
+    }
+
+    async clearMessages() {
+        if (confirm('Are you sure you want to clear ALL messages?')) {
+            await this.messageService.clearAllMessages();
+            this.menuOpen = false;
+        }
     }
 
     cancelReset() {

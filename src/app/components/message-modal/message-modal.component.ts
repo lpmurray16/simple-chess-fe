@@ -18,6 +18,7 @@ export class MessageModalComponent {
   auth = inject(AuthService);
   
   newMessage = '';
+  isFocused = false;
 
   constructor() {
     this.messageService.markAllAsSeen();

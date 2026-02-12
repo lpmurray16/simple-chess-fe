@@ -1,0 +1,45 @@
+<div class="modal-overlay" (click)="onClose()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2><i class="fa-solid fa-clock-rotate-left mr-2"></i> Game History</h2>
+      <button class="close-btn" (click)="onClose()">&times;</button>
+    </div>
+
+    <div class="history-list">
+      @for (record of (historyService.history$ | async); track record.id) {
+      <div class="history-item" [class.is-winner]="record.winner === auth.currentUserId" [class.is-loser]="record.loser === auth.currentUserId">
+        <div class="history-status">
+            <i [class]="getStatusIcon(record.end_game_status)"></i>
+            <span class="status-text">{{ record.end_game_status }}</span>
+        </div>
+        
+        <div class="history-details">
+            <div class="players">
+                <span class="winner" [class.highlight]="record.winner === auth.currentUserId">
+                    {{ getWinnerName(record) }}
+                </span>
+                <span class="vs">vs</span>
+                <span class="loser" [class.highlight]="record.loser === auth.currentUserId">
+                    {{ getLoserName(record) }}
+                </span>
+            </div>
+            <div class="date">{{ record.created | date:'medium' }}</div>
+        </div>
+
+        @if (record.winner === auth.currentUserId) {
+            <div class="result-badge victory">VICTORY</div>
+        } @else if (record.loser === auth.currentUserId) {
+            <div class="result-badge defeat">DEFEAT</div>
+        } @else if (record.end_game_status !== 'Checkmate') {
+            <div class="result-badge draw">DRAW</div>
+        }
+      </div>
+      } @empty {
+      <div class="no-history">
+        <i class="fa-solid fa-scroll fa-3x mb-3"></i>
+        <p>No battles recorded in the scrolls yet...</p>
+      </div>
+      }
+    </div>
+  </div>
+</div>
