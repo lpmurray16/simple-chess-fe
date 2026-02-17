@@ -3,8 +3,8 @@
     // Palette
     --wizard-bg: #1e1e1e;
     --wizard-parchment: #f0e6d2; // For text on dark or light backgrounds if needed, but we go dark mode
-    --wizard-gold: #d4af37;
-    --wizard-gold-dim: #aa8c2c;
+    --wizard-gold: #f5be26;
+    --wizard-gold-dim: #f7c233;
     --wizard-red: #740001;
     --wizard-green: #1a472a;
     --wizard-blue: #0e1a40;
@@ -22,9 +22,9 @@
     --border-color: var(--wizard-gold);
 
     // Board Colors - Wood/Old Style
-    --board-border: #3e2723; // Dark wood
-    --square-light: #dcc7a0; // Aged parchment/wood
-    --square-dark: #5d4037; // Dark mahogany
+    --board-border: #353535; // Dark wood
+    --square-light: #dddddd; // Aged parchment/wood
+    --square-dark: #0a0a0a; // Dark mahogany
     --square-selected: rgba(212, 175, 55, 0.6); // Gold glow overlay
     --valid-move-indicator: rgba(13, 235, 91, 0.5); // Magic green glow dot
 
@@ -37,7 +37,7 @@
     --status-your-turn: #4caf50; // Bright green for visibility, or maybe gold?
 
     // UI Colors
-    --header-bg: #121212;
+    --header-bg: #000000;
     --modal-overlay: rgba(0, 0, 0, 0.8);
 
     // Fonts

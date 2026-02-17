@@ -69,13 +69,14 @@
 
   &.black {
     color: var(--piece-white);
+    background: url("/assets/black-marble.png") no-repeat center center;
     background-color: #000;
-    ;
     border: 2px solid var(--piece-white);
   }
 
   &.white {
     color: var(--piece-black);
+    background: url("/assets/white-marble.png") no-repeat center center;
     background-color: var(--piece-white);
     border: 2px solid var(--piece-black);
   }
@@ -157,11 +158,13 @@
 /* Removed media query for small screens since size is fixed */
 
 .light {
+  background: url("/assets/white-marble.png") no-repeat center center;
   background-color: var(--square-light);
   // Add wood texture noise if possible, or just color
 }
 
 .dark {
+  background: url("/assets/black-marble.png") no-repeat center center;
   background-color: var(--square-dark);
 }
 
