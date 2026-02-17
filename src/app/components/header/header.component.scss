@@ -1,5 +1,6 @@
 .header {
   padding: 1rem;
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 
   .status {
     display: flex;
@@ -41,15 +42,15 @@
 
 @keyframes pulse {
   0% {
-    opacity: 0.7;
+    scale: 1;
   }
 
   50% {
-    opacity: 1;
+    scale: 1.4;
   }
 
   100% {
-    opacity: 0.7;
+    scale: 1;
   }
 }
 

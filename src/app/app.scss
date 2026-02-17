@@ -137,7 +137,7 @@ main {
   flex: 1;
   overflow: hidden;
   position: relative;
-  // background: url('/assets/chess_board_bg.png') no-repeat center center fixed;
+  background: url('/assets/chess_board_bg.webp') no-repeat center center fixed;
   background-size: cover;
   background-color: var(--background-dark);
 }
