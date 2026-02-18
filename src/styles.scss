@@ -26,7 +26,7 @@ h4,
 h5,
 h6 {
     font-family: var(--font-heading);
-    color: var(--wizard-gold);
+    color: var(--wizard-purple);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     margin-top: 0;
 }
@@ -35,7 +35,7 @@ input,
 select,
 textarea {
     background-color: var(--background-panel);
-    border: 1px solid var(--wizard-gold-dim);
+    border: 1px solid var(--wizard-purple-dim);
     color: var(--text-color);
     font-family: var(--font-body);
     padding: 8px;
@@ -44,7 +44,7 @@ textarea {
 
     &:focus {
         outline: none;
-        border-color: var(--wizard-gold);
-        box-shadow: 0 0 5px var(--wizard-gold-dim);
+        border-color: var(--wizard-purple);
+        box-shadow: 0 0 5px var(--wizard-purple-dim);
     }
 }

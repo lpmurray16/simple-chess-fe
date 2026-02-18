@@ -4,18 +4,24 @@
   align-items: center;
   max-width: 600px;
   margin: 0 auto;
-	padding: 10px 0 40px 0;
-	background: #5c5c5cc7;
-	border-radius: 44px;
-	margin-top: 1%;
-	box-shadow: 3px 3px 22px -3px black;
-	border: 1px solid #ffffff1c;
+  padding: 10px 0 40px 0;
+  background: #5c5c5cc7;
+  border-radius: 44px;
+  margin-top: 1%;
+  box-shadow: 3px 3px 22px -3px black;
+  border: 1px solid #ffffff1c;
+
+  @media screen and (max-width: 600px) {
+    border-radius: 0;
+    margin-top: 0;
+    height: 92dvh;
+  }
 }
 
 .spectator-banner {
-  background-color: rgba(var(--wizard-gold-rgb, 212, 175, 55), 0.1);
-  border: 1px solid var(--wizard-gold-dim);
-  color: var(--wizard-gold);
+  background-color: rgba(var(--wizard-purple-rgb, 212, 175, 55), 0.1);
+  border: 1px solid var(--wizard-purple-dim);
+  color: var(--wizard-purple);
   padding: 8px 16px;
   border-radius: 20px;
   margin-bottom: 15px;
@@ -33,7 +39,7 @@
     text-decoration: underline;
 
     &:hover {
-      color: var(--wizard-gold-bright);
+      color: var(--wizard-purple-bright);
     }
   }
 }
@@ -60,7 +66,7 @@
   padding: 10px;
   margin: 5px 0;
   background-color: var(--background-panel);
-  border: 1px solid var(--wizard-gold-dim);
+  border: 1px solid var(--wizard-purple-dim);
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 
@@ -155,7 +161,7 @@
   font-size: calc(var(--square-size) * 0.8);
   transition: background-color 0.2s ease;
 
-  &.valid-move > .piece {
+  &.valid-move>.piece {
     animation: pulse-red 2s infinite ease-in-out;
   }
 }
@@ -263,7 +269,7 @@
 .modal {
   background: var(--background-panel);
   padding: 30px;
-  border: 2px solid var(--wizard-gold);
+  border: 2px solid var(--wizard-purple);
   border-radius: 8px;
   text-align: center;
   color: var(--text-color);
@@ -274,7 +280,7 @@
   h3 {
     font-size: 1.8rem;
     margin-bottom: 1rem;
-    border-bottom: 1px solid var(--wizard-gold-dim);
+    border-bottom: 1px solid var(--wizard-purple-dim);
     padding-bottom: 10px;
   }
 
@@ -316,8 +322,8 @@
 
     &:hover {
       transform: scale(1.1);
-      border-color: var(--wizard-gold);
-      box-shadow: 0 0 10px var(--wizard-gold);
+      border-color: var(--wizard-purple);
+      box-shadow: 0 0 10px var(--wizard-purple);
     }
   }
 }
@@ -334,19 +340,19 @@
   justify-content: center;
   background-color: var(--background-body);
   z-index: 9999;
-  color: var(--wizard-gold);
+  color: var(--wizard-purple);
   font-family: var(--font-heading);
   font-size: 1.5rem;
 
   .spinner {
     width: 60px;
     height: 60px;
-    border: 6px solid var(--wizard-gold-dim);
-    border-top: 6px solid var(--wizard-gold);
+    border: 6px solid var(--wizard-purple-dim);
+    border-top: 6px solid var(--wizard-purple);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 20px;
-    box-shadow: 0 0 20px var(--wizard-gold-dim);
+    box-shadow: 0 0 20px var(--wizard-purple-dim);
   }
 
   &.error-overlay {

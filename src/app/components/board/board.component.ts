@@ -5,11 +5,12 @@ import { AuthService } from '../../services/auth.service';
 import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
 import { Chess, Piece, Square } from 'chess.js';
+import { RefreshButtonComponent } from "../shared/refresh-button.component";
 
 @Component({
     selector: 'app-board',
     standalone: true,
-    imports: [CommonModule, HeaderComponent],
+    imports: [CommonModule, HeaderComponent, RefreshButtonComponent],
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
 })

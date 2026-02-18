@@ -21,7 +21,7 @@ header {
   font-size: 24px;
   margin: 0;
   font-family: var(--font-heading);
-  color: var(--wizard-gold);
+  color: var(--wizard-purple);
 }
 
 .notification-wrapper {
@@ -38,7 +38,7 @@ header {
   }
 
   .bell-icon {
-    color: var(--wizard-gold);
+    color: var(--wizard-purple);
     font-size: 1.5rem;
   }
 
@@ -80,7 +80,7 @@ header {
     display: block;
     width: 25px;
     height: 3px;
-    background-color: var(--wizard-gold);
+    background-color: var(--wizard-purple);
     margin: 5px 0;
     transition: 0.3s;
   }
@@ -105,7 +105,7 @@ header {
   width: 250px;
   height: 100vh;
   background-color: var(--background-panel);
-  border-left: 2px solid var(--wizard-gold);
+  border-left: 2px solid var(--wizard-purple);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -120,7 +120,7 @@ header {
 
   .user-email {
     font-family: var(--font-body);
-    color: var(--wizard-gold);
+    color: var(--wizard-purple);
     margin-bottom: 20px;
     font-size: 1.2rem;
   }
@@ -160,7 +160,7 @@ main {
   background: var(--background-panel);
   padding: 30px;
   border-radius: 12px;
-  border: 2px solid var(--wizard-gold);
+  border: 2px solid var(--wizard-purple);
   position: relative;
   width: 90%;
   max-width: 450px;
@@ -180,7 +180,7 @@ main {
     transition: color 0.2s;
 
     &:hover {
-      color: var(--wizard-gold);
+      color: var(--wizard-purple);
     }
   }
 }

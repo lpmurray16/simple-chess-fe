@@ -46,13 +46,13 @@
 .btn-primary {
   background-color: var(--primary-color);
   color: var(--text-dark);
-  border: 2px solid var(--wizard-gold-dim);
+  border: 2px solid var(--wizard-purple-dim);
 
   &:hover:not(:disabled) {
     background-color: #fff;
     color: var(--background-dark);
-    box-shadow: 0 0 15px var(--wizard-gold);
-    border-color: var(--wizard-gold);
+    box-shadow: 0 0 15px var(--wizard-purple);
+    border-color: var(--wizard-purple);
   }
 }
 
@@ -70,7 +70,7 @@
 
   &:hover:not(:disabled) {
     text-decoration: underline;
-    text-shadow: 0 0 5px var(--wizard-gold);
+    text-shadow: 0 0 5px var(--wizard-purple);
   }
 }
 

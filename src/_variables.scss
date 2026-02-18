@@ -3,24 +3,23 @@
     // Palette
     --wizard-bg: #1e1e1e;
     --wizard-parchment: #f0e6d2; // For text on dark or light backgrounds if needed, but we go dark mode
-    --wizard-gold: #f5be26;
-    --wizard-gold-dim: #f7c233;
     --wizard-red: #740001;
     --wizard-green: #1a472a;
     --wizard-blue: #0e1a40;
     --wizard-border: #4a3c31;
-    --wizard-purple: #9d06d8;
+    --wizard-purple: #8c22b6;
+    --wizard-purple-dim: #b981d1;
 
     // Semantic mappings
-    --primary-color: var(--wizard-gold);
-    --primary-hover: var(--wizard-gold-dim);
+    --primary-color: var(--wizard-purple);
+    --primary-hover: var(--wizard-purple-dim);
     --text-color: #e0e0e0;
     --text-muted: #a0a0a0;
     --text-dark: #1a1a1a; // For buttons/light areas
     --error-color: #ff6b6b;
     --background-dark: var(--wizard-bg);
     --background-panel: #2d2d2d;
-    --border-color: var(--wizard-gold);
+    --border-color: var(--wizard-purple);
 
     // Board Colors - Wood/Old Style
     --board-border: #353535; // Dark wood
