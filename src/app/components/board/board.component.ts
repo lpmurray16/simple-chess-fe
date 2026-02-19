@@ -5,7 +5,9 @@ import { AuthService } from '../../services/auth.service';
 import { HeaderComponent } from '../header/header.component';
 import { Subscription } from 'rxjs';
 import { Chess, Piece, Square } from 'chess.js';
-import { RefreshButtonComponent } from "../shared/refresh-button.component";
+import { RefreshButtonComponent } from '../shared/refresh-button.component';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
     selector: 'app-board',
@@ -25,6 +27,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     private sub: Subscription | null = null;
     private errorSub: Subscription | null = null;
+    private hapticInterval: any = null;
 
     // Unicode pieces
     pieceIcons: { [key: string]: string } = {
@@ -52,6 +55,7 @@ export class BoardComponent implements OnInit, OnDestroy {
             this.gameState = state;
             if (state) {
                 this.updateBoard();
+                this.handleHaptics(state);
             }
         });
 
@@ -63,6 +67,27 @@ export class BoardComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.sub?.unsubscribe();
         this.errorSub?.unsubscribe();
+        if (this.hapticInterval) {
+            clearInterval(this.hapticInterval);
+        }
+    }
+
+    private handleHaptics(state: GameState) {
+        if (Capacitor.isNativePlatform()) {
+            const inCheck = state.status === 'In Check' && this.gameService.isMyTurn();
+
+            if (inCheck && !this.hapticInterval) {
+                // Start heartbeat
+                this.hapticInterval = setInterval(() => {
+                    Haptics.impact({ style: ImpactStyle.Medium });
+                    setTimeout(() => Haptics.impact({ style: ImpactStyle.Light }), 200);
+                }, 1000);
+            } else if (!inCheck && this.hapticInterval) {
+                // Stop heartbeat
+                clearInterval(this.hapticInterval);
+                this.hapticInterval = null;
+            }
+        }
     }
 
     updateBoard() {
