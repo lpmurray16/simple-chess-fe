@@ -1,198 +1,204 @@
 .app-container {
-  font-family: sans-serif;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+    font-family: sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 header {
-  padding: 10px 20px;
-  background: var(--header-bg);
-  color: var(--text-light);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    padding: 10px 20px;
+    background: var(--header-bg);
+    color: var(--text-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .title {
-  font-size: 24px;
-  margin: 0;
-  font-family: var(--font-heading);
-  color: var(--wizard-purple);
+    font-size: 24px;
+    margin: 0;
+    font-family: var(--font-heading);
+    color: var(--wizard-purple);
 }
 
 .notification-wrapper {
-  position: relative;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: transform 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: relative;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  &:hover {
-    transform: scale(1.1);
-  }
+    &:hover {
+        transform: scale(1.1);
+    }
 
-  .bell-icon {
-    color: var(--wizard-purple);
-    font-size: 1.5rem;
-  }
+    .bell-icon {
+        color: var(--wizard-purple);
+        font-size: 1.5rem;
+    }
 
-  .indicator {
-    position: absolute;
-    top: 4px;
-    right: 22px;
-    width: 10px;
-    height: 10px;
-    background: #ff4d4d;
-    border-radius: 50%;
-    border: 2px solid var(--header-bg);
-    box-shadow: 0 0 5px rgba(255, 77, 77, 0.8);
-  }
+    .indicator {
+        position: absolute;
+        top: 4px;
+        right: 22px;
+        width: 10px;
+        height: 10px;
+        background: #ff4d4d;
+        border-radius: 50%;
+        border: 2px solid var(--header-bg);
+        box-shadow: 0 0 5px rgba(255, 77, 77, 0.8);
+    }
 }
 
 .game-status {
-  margin: 0;
-  font-family: var(--font-heading);
-  color: var(--text-muted);
-  display: none; // Hide global status in header on mobile to save space, or keep it
+    margin: 0;
+    font-family: var(--font-heading);
+    color: var(--text-muted);
+    display: none; // Hide global status in header on mobile to save space, or keep it
 }
 
 @media (min-width: 601px) {
-  .game-status {
-    display: block;
-  }
+    .game-status {
+        display: block;
+    }
 }
 
 .hamburger-btn {
-  display: block;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-  z-index: 1002;
-
-  span {
     display: block;
-    width: 25px;
-    height: 3px;
-    background-color: var(--wizard-purple);
-    margin: 5px 0;
-    transition: 0.3s;
-  }
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1002;
 
-  &.open span:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
-  }
+    span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: var(--wizard-purple);
+        margin: 5px 0;
+        transition: 0.3s;
+    }
 
-  &.open span:nth-child(2) {
-    opacity: 0;
-  }
+    &.open span:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
 
-  &.open span:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
-  }
+    &.open span:nth-child(2) {
+        opacity: 0;
+    }
+
+    &.open span:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
 }
 
 .user-menu {
-  position: fixed;
-  top: 0;
-  right: -100%;
-  width: 250px;
-  height: 100vh;
-  background-color: var(--background-panel);
-  border-left: 2px solid var(--wizard-purple);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transition: right 0.3s ease-in-out;
-  z-index: 1001;
-  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.7);
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 250px;
+    height: 100vh;
+    background-color: var(--background-panel);
+    border-left: 2px solid var(--wizard-purple);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: right 0.3s ease-in-out;
+    z-index: 1001;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.7);
 
-  &.open {
-    right: 0;
-  }
+    &.open {
+        right: 0;
+    }
 
-  .user-email {
-    font-family: var(--font-body);
-    color: var(--wizard-purple);
-    margin-bottom: 20px;
-    font-size: 1.2rem;
-  }
+    .user-email {
+        font-family: var(--font-body);
+        color: var(--wizard-purple);
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+    }
 
-  .history-btn,
-  .reset-btn,
-  .logout-btn {
-    width: 80%;
-    margin-bottom: 10px;
-  }
+    .history-btn,
+    .reset-btn,
+    .logout-btn {
+        width: 80%;
+        margin-bottom: 10px;
+    }
 }
 
 main {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  background: url('/assets/chess_board_bg.webp') no-repeat center center fixed;
-  background-size: cover;
-  background-color: var(--background-dark);
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    background: url('/assets/chess_board_bg.webp') no-repeat center center fixed;
+    background-size: cover;
+    background-color: var(--background-dark);
 }
 
 .auth-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000; // Increased to be above board error overlay (9999)
-  backdrop-filter: blur(5px);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; // Increased to be above board error overlay (9999)
+    backdrop-filter: blur(5px);
 }
 
 .auth-modal {
-  background: var(--background-panel);
-  padding: 30px;
-  border-radius: 12px;
-  border: 2px solid var(--wizard-purple);
-  position: relative;
-  width: 90%;
-  max-width: 450px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-  animation: modalSlideUp 0.3s ease-out;
+    background: var(--background-panel);
+    padding: 30px;
+    border-radius: 12px;
+    border: 2px solid var(--wizard-purple);
+    position: relative;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    animation: modalSlideUp 0.3s ease-out;
 
-  .close-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    font-size: 28px;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.2s;
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 28px;
+        cursor: pointer;
+        line-height: 1;
+        transition: color 0.2s;
 
-    &:hover {
-      color: var(--wizard-purple);
+        &:hover {
+            color: var(--wizard-purple);
+        }
     }
-  }
 }
 
 @keyframes modalSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.app-container.native-platform {
+    header {
+        padding-top: env(safe-area-inset-top);
+    }
 }

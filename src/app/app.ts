@@ -10,6 +10,9 @@ import { AuthService } from './services/auth.service';
 import { GameService } from './services/game.service';
 import { MessageService } from './services/message.service';
 
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
+
 @Component({
     selector: 'app-root',
     standalone: true,
@@ -26,6 +29,7 @@ import { MessageService } from './services/message.service';
     styleUrl: './app.scss',
 })
 export class App implements OnInit {
+    isNative = false;
     menuOpen = false;
     showAuth = !inject(AuthService).isValid;
     showMessages = false;
@@ -57,7 +61,12 @@ export class App implements OnInit {
         });
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        if (Capacitor.isNativePlatform()) {
+            this.isNative = true;
+            StatusBar.setStyle({ style: Style.Dark });
+        }
+    }
 
     toggleMenu() {
         this.menuOpen = !this.menuOpen;

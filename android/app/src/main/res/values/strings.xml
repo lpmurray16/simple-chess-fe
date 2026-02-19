@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SimpleWizardsChess</string>
+    <string name="title_activity_main">SimpleWizardsChess</string>
+    <string name="package_name">com.loganmurray.simplewizardschess</string>
+    <string name="custom_url_scheme">com.loganmurray.simplewizardschess</string>
+</resources>
