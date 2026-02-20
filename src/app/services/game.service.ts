@@ -286,6 +286,12 @@ export class GameService {
             status: status,
         });
 
+        // Notify the opponent that it is their turn
+        const opponentId = this.getOpponentId();
+        if (opponentId) {
+            this.notificationService.sendTurnNotification(opponentId);
+        }
+
         // Log game history if the game ended
         if (this.chess.isGameOver()) {
             await this.logGameHistory(status);
