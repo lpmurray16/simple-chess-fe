@@ -2,6 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { AuthService } from './auth.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Chess, Square, Move } from 'chess.js';
+import { NotificationService } from './notification.service';
 
 export type GameStatus =
     | 'New'
@@ -47,22 +48,25 @@ export class GameService {
     constructor(
         private auth: AuthService,
         private ngZone: NgZone,
+        private notificationService: NotificationService,
     ) {
-        // Attempt initial load
-        this.initGameSubscription();
-
         // Re-initialize game if user logs in
         this.auth.currentUser$.subscribe((user) => {
             if (user) {
                 this.initGameSubscription();
             } else {
+                // User is logged out. We are not loading a game.
+                this.isLoadingSubject.next(false);
+
                 // Clear state on logout
                 this.gameStateSubject.next(null);
-                this.isSubscribed = false;
-                this.auth.client
-                    .collection('game_state')
-                    .unsubscribe('*')
-                    .catch(() => {});
+                if (this.isSubscribed) {
+                    this.isSubscribed = false;
+                    this.auth.client
+                        .collection('game_state')
+                        .unsubscribe('*')
+                        .catch(() => {});
+                }
             }
         });
     }
@@ -79,6 +83,9 @@ export class GameService {
 
         console.log('Initializing game subscription...');
 
+        // Cancel any pending notifications, as the user is now active
+        this.notificationService.cancelPendingNotifications();
+
         // Subscribe to the games collection
         // We assume there is only one game for simplicity as requested.
         // If no game exists, we might need to create one, or wait for one.
@@ -89,9 +96,15 @@ export class GameService {
         // Subscribe to changes
         this.auth.client.collection('game_state').subscribe('*', (e) => {
             if (e.action === 'update' || e.action === 'create') {
-                // We need to fetch the full record again to get expanded relations
-                // This is a background update, so don't show full page loader
-                this.fetchOrCreateGame(true);
+                // This is a background update.
+                this.fetchOrCreateGame(true).then(() => {
+                    // After fetching, the new game state is in the BehaviorSubject.
+                    // Let's check if it's now our turn.
+                    if (this.isMyTurn()) {
+                        // It's our turn now, which means the opponent just moved.
+                        this.notificationService.scheduleTurnNotification();
+                    }
+                });
             }
         });
     }

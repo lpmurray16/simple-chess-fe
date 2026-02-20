@@ -12,6 +12,7 @@ import { MessageService } from './services/message.service';
 
 import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
+import { NotificationService } from './services/notification.service';
 
 @Component({
     selector: 'app-root',
@@ -37,6 +38,7 @@ export class App implements OnInit {
     showResetConfirmation = false;
     gameService = inject(GameService);
     messageService = inject(MessageService);
+    notificationService = inject(NotificationService);
 
     get isAdmin() {
         return this.auth.currentUserId === 'x3eeoz1leai6l4h';
@@ -65,6 +67,7 @@ export class App implements OnInit {
         if (Capacitor.isNativePlatform()) {
             this.isNative = true;
             StatusBar.setStyle({ style: Style.Dark });
+            this.notificationService.init();
         }
     }
 
