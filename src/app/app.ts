@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BoardComponent } from './components/board/board.component';
 import { LoginSignupComponent } from './components/login-signup/login-signup.component';
@@ -25,6 +25,7 @@ import { NotificationService } from './services/notification.service';
         OverlayComponent,
         MessageModalComponent,
         GameHistoryModalComponent,
+        AsyncPipe
     ],
     templateUrl: './app.html',
     styleUrl: './app.scss',

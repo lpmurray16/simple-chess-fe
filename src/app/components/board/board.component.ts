@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { GameService, GameState } from '../../services/game.service';
 import { AuthService } from '../../services/auth.service';
 import { HeaderComponent } from '../header/header.component';
@@ -12,7 +12,7 @@ import { Capacitor } from '@capacitor/core';
 @Component({
     selector: 'app-board',
     standalone: true,
-    imports: [CommonModule, HeaderComponent, RefreshButtonComponent],
+    imports: [CommonModule, HeaderComponent, RefreshButtonComponent, AsyncPipe],
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
 })
