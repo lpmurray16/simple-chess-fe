@@ -71,6 +71,22 @@ export class GameService {
         });
     }
 
+    private getOpponentId(): string | null {
+        const state = this.gameStateSubject.value;
+        if (!state) {
+            return null;
+        }
+
+        const currentUserId = this.auth.currentUserId;
+        if (state.white_player === currentUserId) {
+            return state.black_player;
+        } else if (state.black_player === currentUserId) {
+            return state.white_player;
+        }
+
+        return null;
+    }
+
     private async initGameSubscription() {
         // Wait for user to be logged in before initializing game
         if (!this.auth.isValid) {
@@ -102,7 +118,10 @@ export class GameService {
                     // Let's check if it's now our turn.
                     if (this.isMyTurn()) {
                         // It's our turn now, which means the opponent just moved.
-                        this.notificationService.scheduleTurnNotification();
+                        const opponentId = this.getOpponentId();
+                        if (opponentId) {
+                            this.notificationService.scheduleTurnNotification(0, opponentId);
+                        }
                     }
                 });
             }
