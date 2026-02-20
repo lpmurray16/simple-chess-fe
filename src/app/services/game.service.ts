@@ -113,17 +113,7 @@ export class GameService {
         this.auth.client.collection('game_state').subscribe('*', (e) => {
             if (e.action === 'update' || e.action === 'create') {
                 // This is a background update.
-                this.fetchOrCreateGame(true).then(() => {
-                    // After fetching, the new game state is in the BehaviorSubject.
-                    // Let's check if it's now our turn.
-                    if (this.isMyTurn()) {
-                        // It's our turn now, which means the opponent just moved.
-                        const opponentId = this.getOpponentId();
-                        if (opponentId) {
-                            this.notificationService.scheduleTurnNotification(0, opponentId);
-                        }
-                    }
-                });
+                this.fetchOrCreateGame(true);
             }
         });
     }
