@@ -25,7 +25,7 @@ import { NotificationService } from './services/notification.service';
         OverlayComponent,
         MessageModalComponent,
         GameHistoryModalComponent,
-        AsyncPipe
+        AsyncPipe,
     ],
     templateUrl: './app.html',
     styleUrl: './app.scss',
@@ -50,6 +50,8 @@ export class App implements OnInit {
         this.auth.currentUser$.subscribe((user) => {
             if (user) {
                 this.showAuth = false;
+                // Once we have a logged in user, initialize push notifications
+                this.notificationService.init();
             } else {
                 // Enforce login if not authenticated
                 this.showAuth = true;
@@ -69,6 +71,9 @@ export class App implements OnInit {
             this.isNative = true;
             StatusBar.setStyle({ style: Style.Dark });
             this.notificationService.init();
+        } else {
+            // For web, initialize after a user logs in.
+            // This is handled in the constructor's subscription.
         }
     }
 

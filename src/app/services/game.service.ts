@@ -96,12 +96,7 @@ export class GameService {
 
         if (this.isSubscribed) return;
         this.isSubscribed = true;
-
         console.log('Initializing game subscription...');
-
-        // Cancel any pending notifications, as the user is now active
-        this.notificationService.cancelPendingNotifications();
-
         // Subscribe to the games collection
         // We assume there is only one game for simplicity as requested.
         // If no game exists, we might need to create one, or wait for one.
