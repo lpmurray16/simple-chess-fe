@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
+import { ToastService } from './toast.service';
 
 export interface Message {
   id: string;
@@ -26,7 +27,7 @@ export class MessageService {
   private hasNewMessagesSubject = new BehaviorSubject<boolean>(false);
   public hasNewMessages$ = this.hasNewMessagesSubject.asObservable();
 
-  constructor(private auth: AuthService) {
+  constructor(private auth: AuthService, private toastService: ToastService) {
     this.auth.currentUser$.subscribe((user) => {
       if (user) {
         this.fetchMessages();
@@ -51,6 +52,7 @@ export class MessageService {
       this.updateNotificationStatus(messages);
     } catch (error) {
       console.error('Error fetching messages:', error);
+      this.toastService.error('Failed to load messages');
     }
   }
 
@@ -89,8 +91,10 @@ export class MessageService {
         await this.auth.client.collection('messages').delete(record.id);
       }
       this.fetchMessages();
+      this.toastService.success('All messages cleared');
     } catch (error) {
       console.error('Error clearing messages:', error);
+      this.toastService.error('Failed to clear messages');
     }
   }
 
@@ -103,6 +107,7 @@ export class MessageService {
       });
     } catch (error) {
       console.error('Error sending message:', error);
+      this.toastService.error('Failed to send message');
     }
   }
 }

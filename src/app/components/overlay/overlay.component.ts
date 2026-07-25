@@ -12,6 +12,8 @@ import { Subscription } from 'rxjs';
 })
 export class OverlayComponent implements OnInit, OnDestroy {
     isVisible = false;
+    isLoading = false;
+    loadError = false;
     currentGifUrl: string = '';
     private captureSub: Subscription | null = null;
     private timer: any = null;
@@ -56,18 +58,39 @@ export class OverlayComponent implements OnInit, OnDestroy {
         this.currentGifUrl = this.gifOptions[randomIndex];
 
         this.isVisible = true;
+        this.isLoading = true;
+        this.loadError = false;
         this.cdr.detectChanges();
         this.clearTimer();
+    }
 
-        // Hide after 5 seconds
+    onGifLoad() {
+        this.isLoading = false;
+        this.loadError = false;
+        this.cdr.detectChanges();
+
+        // Keep the loaded GIF visible for the full display duration.
         this.timer = setTimeout(() => {
             this.isVisible = false;
             this.cdr.detectChanges();
         }, 7000);
     }
 
+    onGifError() {
+        this.isLoading = false;
+        this.loadError = true;
+        this.cdr.detectChanges();
+
+        this.timer = setTimeout(() => {
+            this.isVisible = false;
+            this.cdr.detectChanges();
+        }, 3000);
+    }
+
     closeOverlay() {
         this.isVisible = false;
+        this.isLoading = false;
+        this.loadError = false;
         this.clearTimer();
     }
 

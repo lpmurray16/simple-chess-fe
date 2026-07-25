@@ -6,9 +6,11 @@ import { LoginSignupComponent } from './components/login-signup/login-signup.com
 import { OverlayComponent } from './components/overlay/overlay.component';
 import { MessageModalComponent } from './components/message-modal/message-modal.component';
 import { GameHistoryModalComponent } from './components/game-history-modal/game-history-modal.component';
+import { ToastComponent } from './components/shared/toast.component';
 import { AuthService } from './services/auth.service';
 import { GameService } from './services/game.service';
 import { MessageService } from './services/message.service';
+import { ToastService } from './services/toast.service';
 
 import { Capacitor } from '@capacitor/core';
 import { StatusBar, Style } from '@capacitor/status-bar';
@@ -25,6 +27,7 @@ import { NotificationService } from './services/notification.service';
         OverlayComponent,
         MessageModalComponent,
         GameHistoryModalComponent,
+        ToastComponent,
         AsyncPipe,
     ],
     templateUrl: './app.html',
@@ -70,7 +73,6 @@ export class App implements OnInit {
         if (Capacitor.isNativePlatform()) {
             this.isNative = true;
             StatusBar.setStyle({ style: Style.Dark });
-            this.notificationService.init();
         } else {
             // For web, initialize after a user logs in.
             // This is handled in the constructor's subscription.

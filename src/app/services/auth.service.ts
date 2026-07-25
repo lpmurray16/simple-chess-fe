@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import PocketBase from 'pocketbase';
 import { BehaviorSubject } from 'rxjs';
+import { ToastService } from './toast.service';
 
 @Injectable({
     providedIn: 'root',
@@ -15,7 +16,7 @@ export class AuthService {
 
     private readonly authStoreCleanupIntervalMs = 30000;
 
-    constructor() {
+    constructor(private toastService: ToastService) {
         this.pb = new PocketBase('https://simple-chess-pb-backend.fly.dev');
         this.pb.autoCancellation(false);
         this.pb.authStore.onChange(() => {
@@ -52,21 +53,36 @@ export class AuthService {
     }
 
     async login(email: string, pass: string) {
-        return await this.pb.collection('users').authWithPassword(email, pass);
+        try {
+            const result = await this.pb.collection('users').authWithPassword(email, pass);
+            this.toastService.success('Welcome back!');
+            return result;
+        } catch (err: any) {
+            this.toastService.error(err.message || 'Login failed');
+            throw err;
+        }
     }
 
     async signup(email: string, pass: string) {
-        const data = {
-            email: email,
-            password: pass,
-            passwordConfirm: pass,
-            name: email.split('@')[0],
-        };
-        return await this.pb.collection('users').create(data);
+        try {
+            const data = {
+                email: email,
+                password: pass,
+                passwordConfirm: pass,
+                name: email.split('@')[0],
+            };
+            const result = await this.pb.collection('users').create(data);
+            this.toastService.success('Account created! Logging in...');
+            return result;
+        } catch (err: any) {
+            this.toastService.error(err.message || 'Signup failed');
+            throw err;
+        }
     }
 
     logout() {
         this.pb.authStore.clear();
+        this.toastService.info('Logged out');
     }
 
     requestLogin() {

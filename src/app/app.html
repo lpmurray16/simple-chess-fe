@@ -41,8 +41,9 @@
     </header>
 
     <main>
-        <app-board></app-board>
-        <app-overlay></app-overlay>
+            <app-board></app-board>
+            <app-overlay></app-overlay>
+            <app-toast></app-toast>
 
         @if (showAuth && !(auth.currentUser$ | async)) {
         <div class="auth-overlay">

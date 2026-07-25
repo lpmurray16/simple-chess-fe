@@ -1,5 +1,21 @@
 <div class="overlay-container" *ngIf="isVisible">
   <div class="overlay-content">
-    <img [src]="currentGifUrl" alt="Chess Capture Celebration" />
+    <div class="gif-loader" *ngIf="isLoading" role="status" aria-live="polite">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <p>Summoning capture...</p>
+    </div>
+
+    <div class="gif-error" *ngIf="loadError" role="alert">
+      <span aria-hidden="true">✦</span>
+      <p>The capture magic fizzled.</p>
+    </div>
+
+    <img
+      [src]="currentGifUrl"
+      [class.loaded]="!isLoading && !loadError"
+      (load)="onGifLoad()"
+      (error)="onGifError()"
+      alt="Chess Capture Celebration"
+    />
   </div>
 </div>

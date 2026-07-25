@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { Chess, Square, Move } from 'chess.js';
 import { NotificationService } from './notification.service';
+import { ToastService } from './toast.service';
 
 export type GameStatus =
     | 'New'
@@ -44,11 +45,13 @@ export class GameService {
 
     private chess = new Chess();
     private isSubscribed = false;
+    private lastStatus: GameStatus | null = null;
 
     constructor(
         private auth: AuthService,
         private ngZone: NgZone,
         private notificationService: NotificationService,
+        private toastService: ToastService,
     ) {
         // Re-initialize game if user logs in
         this.auth.currentUser$.subscribe((user) => {
@@ -158,130 +161,170 @@ export class GameService {
     }
 
     private updateLocalState(record: any, shouldCheckCapture: boolean = false) {
-        console.log('Updating local state with record:', record);
-        const state: GameState = {
-            id: record.id,
-            fen: record.fen,
-            white_player: record.white_player,
-            black_player: record.black_player,
-            expand: record.expand,
-            pgn: record.pgn,
-            status: record.status,
-        };
+            console.log('Updating local state with record:', record);
+            const state: GameState = {
+                id: record.id,
+                fen: record.fen,
+                white_player: record.white_player,
+                black_player: record.black_player,
+                expand: record.expand,
+                pgn: record.pgn,
+                status: record.status,
+            };
 
-        // Store old PGN for capture detection
-        const oldPgn = this.chess.pgn();
+            // Store old PGN for capture detection
+            const oldPgn = this.chess.pgn();
 
-        // Sync internal chess logic FIRST
-        // We prioritize PGN to preserve move history and repetition state
-        try {
-            if (state.pgn) {
-                console.log('Loading PGN:', state.pgn);
-                this.chess.loadPgn(state.pgn);
-
-                // Extract last move from history after loading PGN
-                const history = this.chess.history({ verbose: true });
-                if (history.length > 0) {
-                    const lastMove = history[history.length - 1];
-                    state.lastMove = { from: lastMove.from, to: lastMove.to };
-                } else {
-                    state.lastMove = null;
-                }
-            } else {
-                throw new Error('No PGN available');
-            }
-        } catch (pgnError) {
-            console.warn('Failed to load PGN, falling back to FEN', pgnError);
+            // Sync internal chess logic FIRST
+            // We prioritize PGN to preserve move history and repetition state
             try {
-                this.chess.load(state.fen);
-            } catch (fenError) {
-                console.error('Invalid FEN loaded', fenError);
-            }
-        }
+                if (state.pgn) {
+                    console.log('Loading PGN:', state.pgn);
+                    this.chess.loadPgn(state.pgn);
 
-        // Check for capture if this is an update (not initial load)
-        if (shouldCheckCapture) {
-            const newPgn = this.chess.pgn();
-            if (newPgn !== oldPgn) {
-                const history = this.chess.history({ verbose: true });
-                const lastMove = history[history.length - 1];
-                if (lastMove && lastMove.captured) {
-                    console.log('Capture detected!');
-                    this.capture$.next();
+                    // Extract last move from history after loading PGN
+                    const history = this.chess.history({ verbose: true });
+                    if (history.length > 0) {
+                        const lastMove = history[history.length - 1];
+                        state.lastMove = { from: lastMove.from, to: lastMove.to };
+                    } else {
+                        state.lastMove = null;
+                    }
+                } else {
+                    throw new Error('No PGN available');
+                }
+            } catch (pgnError) {
+                console.warn('Failed to load PGN, falling back to FEN', pgnError);
+                try {
+                    this.chess.load(state.fen);
+                } catch (fenError) {
+                    console.error('Invalid FEN loaded', fenError);
                 }
             }
-        }
 
-        // Emit state inside Angular Zone to ensure UI updates
-        this.ngZone.run(() => {
-            console.log('Emitting new state to subscribers');
-            this.gameStateSubject.next(state);
-        });
-    }
+            // Check for capture if this is an update (not initial load)
+            if (shouldCheckCapture) {
+                const newPgn = this.chess.pgn();
+                if (newPgn !== oldPgn) {
+                    const history = this.chess.history({ verbose: true });
+                    const lastMove = history[history.length - 1];
+                    if (lastMove && lastMove.captured) {
+                        console.log('Capture detected!');
+                        this.capture$.next();
+                    }
+                }
+            }
+
+            // Show toast for game status changes
+            if (this.lastStatus && this.lastStatus !== state.status) {
+                this.showStatusToast(state.status);
+            }
+            this.lastStatus = state.status;
+
+            // Emit state inside Angular Zone to ensure UI updates
+            this.ngZone.run(() => {
+                console.log('Emitting new state to subscribers');
+                this.gameStateSubject.next(state);
+            });
+        }
 
     async makeMove(from: string, to: string, promotion: string = 'q') {
-        const currentState = this.gameStateSubject.value;
-        if (!currentState) return;
+            const currentState = this.gameStateSubject.value;
+            if (!currentState) return;
 
-        // Validate turn
-        const turnColor = this.chess.turn(); // 'w' or 'b'
-        const userId = this.auth.currentUserId;
+            // Validate turn
+            const turnColor = this.chess.turn(); // 'w' or 'b'
+            const userId = this.auth.currentUserId;
 
-        if (turnColor === 'w' && currentState.white_player !== userId) {
-            throw new Error('Not your turn (You are not White)');
-        }
-        if (turnColor === 'b' && currentState.black_player !== userId) {
-            throw new Error('Not your turn (You are not Black)');
-        }
-
-        // Try move locally first to validate
-        try {
-            const move = this.chess.move({ from, to, promotion });
-            if (!move) throw new Error('Invalid move');
-
-            if (move.captured) {
-                this.capture$.next();
+            if (turnColor === 'w' && currentState.white_player !== userId) {
+                throw new Error('Not your turn (You are not White)');
             }
-        } catch (e) {
-            throw new Error('Invalid move');
+            if (turnColor === 'b' && currentState.black_player !== userId) {
+                throw new Error('Not your turn (You are not Black)');
+            }
+
+            // Try move locally first to validate
+            try {
+                const move = this.chess.move({ from, to, promotion });
+                if (!move) throw new Error('Invalid move');
+
+                if (move.captured) {
+                    this.capture$.next();
+                }
+            } catch (e) {
+                throw new Error('Invalid move');
+            }
+
+            // Determine status
+            let status: GameStatus = 'White Move';
+            if (this.chess.turn() === 'b') {
+                status = 'Black Move';
+            } else {
+                status = 'White Move';
+            }
+
+            if (this.chess.isCheckmate()) {
+                status = 'Checkmate';
+            } else if (this.chess.isStalemate()) {
+                status = 'Stalemate';
+            } else if (this.chess.isDraw()) {
+                status = 'Draw';
+            } else if (this.chess.inCheck()) {
+                status = 'In Check';
+            }
+
+            // Update backend
+            await this.auth.client.collection('game_state').update(currentState.id, {
+                fen: this.chess.fen(),
+                pgn: this.chess.pgn(),
+                status: status,
+            });
+
+            // Notify the opponent that it is their turn
+            const opponentId = this.getOpponentId();
+            if (opponentId) {
+                this.notificationService.sendTurnNotification(opponentId);
+            }
+
+            // Log game history if the game ended
+            if (this.chess.isGameOver()) {
+                await this.logGameHistory(status);
+            }
         }
 
-        // Determine status
-        let status: GameStatus = 'White Move';
-        if (this.chess.turn() === 'b') {
-            status = 'Black Move';
-        } else {
-            status = 'White Move';
+        private showStatusToast(status: GameStatus) {
+            const playerColor = this.getPlayerColor();
+            const isMyTurn = this.isMyTurn();
+        
+            switch (status) {
+                case 'Checkmate':
+                    if (isMyTurn) {
+                        this.toastService.error('Checkmate! You lost.');
+                    } else if (playerColor) {
+                        this.toastService.success('Checkmate! You won! 🎉');
+                    } else {
+                        this.toastService.info('Game over: Checkmate');
+                    }
+                    break;
+                case 'Stalemate':
+                    this.toastService.info('Stalemate! Game drawn.');
+                    break;
+                case 'Draw':
+                    this.toastService.info('Game drawn.');
+                    break;
+                case 'In Check':
+                    if (isMyTurn) {
+                        this.toastService.warning('You are in check! ♛');
+                    }
+                    break;
+                case 'White Move':
+                case 'Black Move':
+                    if (isMyTurn) {
+                        this.toastService.success('Your turn!');
+                    }
+                    break;
+            }
         }
-
-        if (this.chess.isCheckmate()) {
-            status = 'Checkmate';
-        } else if (this.chess.isStalemate()) {
-            status = 'Stalemate';
-        } else if (this.chess.isDraw()) {
-            status = 'Draw';
-        } else if (this.chess.inCheck()) {
-            status = 'In Check';
-        }
-
-        // Update backend
-        await this.auth.client.collection('game_state').update(currentState.id, {
-            fen: this.chess.fen(),
-            pgn: this.chess.pgn(),
-            status: status,
-        });
-
-        // Notify the opponent that it is their turn
-        const opponentId = this.getOpponentId();
-        if (opponentId) {
-            this.notificationService.sendTurnNotification(opponentId);
-        }
-
-        // Log game history if the game ended
-        if (this.chess.isGameOver()) {
-            await this.logGameHistory(status);
-        }
-    }
 
     private async logGameHistory(status: GameStatus) {
         const currentState = this.gameStateSubject.value;
@@ -322,37 +365,39 @@ export class GameService {
     }
 
     async resetGame() {
-        this.chess.reset();
-        const data = {
-            fen: this.chess.fen(),
-            pgn: this.chess.pgn(),
-            white_player: '',
-            black_player: '',
-            status: 'New',
-        };
+            this.chess.reset();
+            const data = {
+                fen: this.chess.fen(),
+                pgn: this.chess.pgn(),
+                white_player: '',
+                black_player: '',
+                status: 'New',
+            };
 
-        // Check if we have a game ID to update, or create new
-        const current = this.gameStateSubject.value;
-        if (current?.id) {
-            await this.auth.client.collection('game_state').update(current.id, data);
-        } else {
-            await this.auth.client.collection('game_state').create(data);
+            // Check if we have a game ID to update, or create new
+            const current = this.gameStateSubject.value;
+            if (current?.id) {
+                await this.auth.client.collection('game_state').update(current.id, data);
+            } else {
+                await this.auth.client.collection('game_state').create(data);
+            }
+            this.toastService.info('Game reset! New board ready.');
         }
-    }
 
     async joinGame(color: 'white' | 'black') {
-        const current = this.gameStateSubject.value;
-        if (!current) return;
+            const current = this.gameStateSubject.value;
+            if (!current) return;
 
-        const userId = this.auth.currentUserId;
-        if (!userId) throw new Error('Must be logged in');
+            const userId = this.auth.currentUserId;
+            if (!userId) throw new Error('Must be logged in');
 
-        const updateData: any = {};
-        if (color === 'white') updateData.white_player = userId;
-        if (color === 'black') updateData.black_player = userId;
+            const updateData: any = {};
+            if (color === 'white') updateData.white_player = userId;
+            if (color === 'black') updateData.black_player = userId;
 
-        await this.auth.client.collection('game_state').update(current.id, updateData);
-    }
+            await this.auth.client.collection('game_state').update(current.id, updateData);
+            this.toastService.success(`Joined as ${color.charAt(0).toUpperCase() + color.slice(1)}!`);
+        }
 
     // Helper for UI to know valid moves
     getValidMoves(square: string): Move[] {

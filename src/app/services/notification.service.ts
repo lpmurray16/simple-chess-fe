@@ -11,6 +11,7 @@ import {
 } from '@capacitor/push-notifications';
 import { SwPush } from '@angular/service-worker';
 import { environment } from '../../environments/environment';
+import { ToastService } from './toast.service';
 
 @Injectable({
     providedIn: 'root',
@@ -18,12 +19,21 @@ import { environment } from '../../environments/environment';
 export class NotificationService {
     private http = inject(HttpClient);
     private swPush = inject(SwPush);
+    private initialization: Promise<void> | null = null;
     readonly VAPID_PUBLIC_KEY =
         'BDJF-MunimAEABhe_lVt7Af8T-kfFJs6riCk0FrxQnCJwgKHBehcK7bRXFAzdMmil3xL3IyemOP2P9WzAFKjp1w';
 
-    constructor(private auth: AuthService) {}
+    constructor(private auth: AuthService, private toastService: ToastService) {}
 
-    async init() {
+    init(): Promise<void> {
+        if (!this.initialization) {
+            this.initialization = this.initialize();
+        }
+
+        return this.initialization;
+    }
+
+    private async initialize() {
         if (Capacitor.isNativePlatform()) {
             // Native platform logic
             await this.registerNativePush();
@@ -49,8 +59,10 @@ export class NotificationService {
                 subscription: sub.toJSON(), // Save the whole subscription object
             });
             console.log('Web push subscription successful and saved.');
+            this.toastService.success('Push notifications enabled!');
         } catch (err) {
             console.error('Could not subscribe to web push notifications', err);
+            this.toastService.error('Failed to enable push notifications');
         }
     }
 
@@ -65,6 +77,7 @@ export class NotificationService {
         }
 
         if (permStatus.receive !== 'granted') {
+            this.toastService.error('Push notification permission denied');
             throw new Error('User denied permissions!');
         }
 
@@ -81,11 +94,13 @@ export class NotificationService {
                 subscription: token.value, // Save the token string
             });
             console.log('FCM token saved.');
+            this.toastService.success('Push notifications enabled!');
         });
 
         // Some issue with our setup and push will not work
         PushNotifications.addListener('registrationError', (error: any) => {
             console.error('Error on registration: ' + JSON.stringify(error));
+            this.toastService.error('Push registration failed');
         });
 
         // Show us the notification payload if the app is open on our device
@@ -135,6 +150,7 @@ export class NotificationService {
             console.log('Cloud function called successfully', result);
         } catch (error) {
             console.error('Error calling cloud function via fetch:', error);
+            this.toastService.error('Failed to send turn notification');
         }
     }
 

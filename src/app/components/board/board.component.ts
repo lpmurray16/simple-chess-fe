@@ -8,6 +8,7 @@ import { Chess, Piece, Square } from 'chess.js';
 import { RefreshButtonComponent } from '../shared/refresh-button.component';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { Capacitor } from '@capacitor/core';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
     selector: 'app-board',
@@ -46,9 +47,10 @@ export class BoardComponent implements OnInit, OnDestroy {
     };
 
     constructor(
-        public gameService: GameService,
-        public auth: AuthService,
-    ) {}
+            public gameService: GameService,
+            public auth: AuthService,
+            private toastService: ToastService,
+        ) {}
 
     ngOnInit() {
         this.sub = this.gameService.gameState$.subscribe((state) => {
