@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { GameService, GameState } from '../../services/game.service';
 import { AuthService } from '../../services/auth.service';
@@ -25,6 +25,15 @@ export class BoardComponent implements OnInit, OnDestroy {
     promotionMove: { from: string; to: string } | null = null;
 
     errorMessage: string | null = null;
+    checkedKingSquare: Square | null = null;
+    capturesOpen = false;
+    capturedByWhite: Piece[] = [];
+    capturedByBlack: Piece[] = [];
+    readonly pieceNames: Record<string, string> = {
+        p: 'pawn', n: 'knight', b: 'bishop', r: 'rook', q: 'queen', k: 'king',
+    };
+    @ViewChild('capturesDialog') private capturesDialog?: ElementRef<HTMLDialogElement>;
+
 
     private sub: Subscription | null = null;
     private errorSub: Subscription | null = null;
@@ -54,7 +63,15 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.sub = this.gameService.gameState$.subscribe((state) => {
+            const positionChanged = state?.id !== this.gameState?.id || state?.fen !== this.gameState?.fen;
             this.gameState = state;
+            if (positionChanged) this.cancelPromotion();
+            if (!state) {
+                this.closeCaptures();
+                this.capturedByWhite = [];
+                this.capturedByBlack = [];
+                this.checkedKingSquare = null;
+            }
             if (state) {
                 this.updateBoard();
                 this.handleHaptics(state);
@@ -98,6 +115,35 @@ export class BoardComponent implements OnInit, OnDestroy {
         // Service exposes fen. We can use a local chess instance to parse fen for board.
         const chess = new Chess(this.gameService.fen);
         this.board = chess.board(); // 8x8, Rank 8 at index 0
+        this.checkedKingSquare = chess.inCheck()
+            ? this.board.flat().find((piece) => piece?.type === 'k' && piece.color === chess.turn())?.square ?? null
+            : null;
+        this.capturedByWhite = [];
+        this.capturedByBlack = [];
+        for (const move of this.gameService.getMoveHistory()) {
+            if (!move.captured) continue;
+            const captured: Piece = { type: move.captured, color: move.color === 'w' ? 'b' : 'w' };
+            (move.color === 'w' ? this.capturedByWhite : this.capturedByBlack).push(captured);
+        }
+    }
+
+    openCaptures() {
+        this.capturesDialog?.nativeElement.showModal();
+        this.capturesOpen = true;
+    }
+
+    closeCaptures() {
+        this.capturesDialog?.nativeElement.close();
+        this.capturesOpen = false;
+    }
+
+    onCapturesBackdropClick(event: MouseEvent) {
+        if (event.target === this.capturesDialog?.nativeElement) this.closeCaptures();
+    }
+
+    get checkDescription(): string {
+        if (!this.checkedKingSquare) return '';
+        return `${this.gameService.turn === 'w' ? 'White' : 'Black'} king on ${this.checkedKingSquare} is in check.`;
     }
 
     get isSpectator(): boolean {
@@ -145,11 +191,11 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     async onSquareClick(visualRowIndex: number, visualColIndex: number) {
-        if (!this.gameState) return;
+        if (!this.gameState || this.gameService.isSubmitting || this.promotionMove) return;
 
         // Check if game is over
         // Check against terminal states
-        if (['Checkmate', 'Stalemate'].includes(this.gameState.status)) return;
+        if (this.gameService.isGameOver() || ['Checkmate', 'Stalemate', 'Draw'].includes(this.gameState.status)) return;
 
         // Check if user is a player
         const playerColor = this.gameService.getPlayerColor();
@@ -194,7 +240,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     }
 
     async onPromotionSelect(piece: string) {
-        if (this.promotionMove) {
+        if (this.promotionMove && !this.gameService.isSubmitting) {
             await this.gameService.makeMove(this.promotionMove.from, this.promotionMove.to, piece);
             this.promotionMove = null;
             this.selectedSquare = null;

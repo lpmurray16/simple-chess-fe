@@ -3,11 +3,10 @@
   flex-direction: column;
   align-items: center;
   max-width: 600px;
-  margin: 0 auto;
-  padding: 10px 0 40px 0;
+  margin: 1% auto 0;
+  padding: 10px 0 40px;
   background: #5c5c5cc7;
   border-radius: 44px;
-  margin-top: 1%;
   box-shadow: 3px 3px 22px -3px black;
   border: 1px solid #ffffff1c;
 
@@ -55,8 +54,6 @@
     transform: translateY(0);
   }
 }
-
-
 
 .player-info {
   display: flex;
@@ -108,10 +105,6 @@
     font-size: 1.2rem;
   }
 
-  .player-color {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-  }
 }
 
 .board {
@@ -166,12 +159,10 @@
   }
 }
 
-/* Removed media query for small screens since size is fixed */
-
 .light {
   background: url("/assets/white-marble.png") no-repeat center center;
   background-color: var(--square-light);
-  // Add wood texture noise if possible, or just color
+
 }
 
 .dark {
@@ -241,23 +232,11 @@
     }
   }
 
-  .btn-reset {
-    border-color: #ff6b6b;
-    color: #ff6b6b;
-
-    &:hover {
-      background-color: rgba(255, 107, 107, 0.1);
-      box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
-    }
-  }
 }
 
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: var(--modal-overlay);
   backdrop-filter: blur(5px);
   display: flex;
@@ -284,24 +263,12 @@
     padding-bottom: 10px;
   }
 
-  p {
-    margin-bottom: 25px;
-    font-size: 1.1rem;
-    color: var(--text-muted);
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-
-    button {
-      min-width: 120px;
-    }
-  }
 }
 
 .promotion-pieces {
+  border: 0;
+  padding: 0;
+  min-width: 0;
   display: flex;
   gap: 15px;
   margin: 20px 0;
@@ -371,13 +338,6 @@
   }
 }
 
-.btn-refresh:hover {
-  .fa-arrows-rotate {
-    animation: spin 0.5s linear;
-  }
-}
-
-
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -386,6 +346,39 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.board-feedback {
+  min-height: 1.4em;
+  margin: 0 8px 8px;
+  color: var(--text-color);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.coordinate {
+  position: absolute;
+  z-index: 3;
+  font: 700 10px/1 sans-serif;
+  padding: 1px 2px;
+  border-radius: 2px;
+  color: #fff;
+  background: #161019e6;
+  pointer-events: none;
+}
+
+.rank-coordinate { top: 2px; left: 2px; }
+.file-coordinate { bottom: 2px; right: 2px; }
+
+.square.king-in-check::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  z-index: 2;
+  border: 3px solid #ff625c;
+  border-radius: 5px;
+  box-shadow: inset 0 0 12px #ff322b99, 0 0 5px #180000;
+  pointer-events: none;
 }
 
 .pulsing-green-circle {
@@ -397,21 +390,17 @@
 }
 
 @keyframes pulse-red {
-  0% {
+  0%, 100% {
     color: #ff6b6b;
   }
 
   50% {
     color: #dd1818;
   }
-
-  100% {
-    color: #ff6b6b;
-  }
 }
 
 @keyframes pulse {
-  0% {
+  0%, 100% {
     transform: scale(0.8);
     opacity: 0.5;
   }
@@ -419,10 +408,5 @@
   50% {
     transform: scale(1.2);
     opacity: 1;
-  }
-
-  100% {
-    transform: scale(0.8);
-    opacity: 0.5;
   }
 }

@@ -44,13 +44,24 @@
     </div>
 
     <!-- Game Board -->
-    <div class="board" [class.spectator-mode]="isSpectator" [class.players-turn]="gameService.isMyTurn()">
+    <p class="board-feedback" role="status" aria-live="polite">{{ gameService.isSubmitting ? 'Saving move…' : checkDescription }}</p>
+    <div class="board" [class.spectator-mode]="isSpectator" [class.players-turn]="gameService.isMyTurn()"
+        [attr.aria-busy]="gameService.isSubmitting">
         @for (rank of displayedBoard; track i; let i = $index) {
         <div class="rank">
             @for (cell of rank; track j; let j = $index) {
             <div class="square" [class.light]="(i + j) % 2 === 0" [class.dark]="(i + j) % 2 !== 0"
                 [class.selected]="isSquareSelected(i, j)" [class.valid-move]="isSquareValidMove(i, j)"
-                [class.last-move]="isSquareLastMove(i, j)" (click)="onSquareClick(i, j)">
+                [class.last-move]="isSquareLastMove(i, j)"
+                [class.king-in-check]="getSquareFromVisual(i, j) === checkedKingSquare"
+                [attr.title]="getSquareFromVisual(i, j) === checkedKingSquare ? checkDescription : getSquareFromVisual(i, j)"
+                (click)="onSquareClick(i, j)">
+                @if (j === 0) {
+                <span class="coordinate rank-coordinate" aria-hidden="true">{{ getSquareFromVisual(i, j)[1] }}</span>
+                }
+                @if (i === 7) {
+                <span class="coordinate file-coordinate" aria-hidden="true">{{ getSquareFromVisual(i, j)[0] }}</span>
+                }
 
                 @if (cell) {
                 <span class="piece" [class.white-piece]="cell.color === 'w'" [class.black-piece]="cell.color === 'b'">
@@ -90,31 +101,73 @@
         <div class="control-group">
             @if(!gameService.bothPlayersHaveBeenClaimed()){
             <div class="claim-buttons">
-                <button class="btn btn-white" (click)="join('white')" [disabled]="gameState.white_player">Claim
+                <button class="btn btn-white" (click)="join('white')" [disabled]="gameState.white_player || gameService.isSubmitting">Claim
                     White</button>
-                <button class="btn btn-black" (click)="join('black')" [disabled]="gameState.black_player">Claim
+                <button class="btn btn-black" (click)="join('black')" [disabled]="gameState.black_player || gameService.isSubmitting">Claim
                     Black</button>
             </div>
             }
             <div class="d-flex gap-2 md-flex-wrap flex-grow-1 mt-4">
                 <refresh-button (click)="refresh()"></refresh-button>
+                <button class="btn btn-default" (click)="openCaptures()" aria-haspopup="dialog"
+                    aria-controls="captures-drawer" [attr.aria-expanded]="capturesOpen">Captures</button>
             </div>
         </div>
         }
     </div>
+
+    <dialog #capturesDialog id="captures-drawer" class="captures-drawer" aria-labelledby="captures-title"
+        (click)="onCapturesBackdropClick($event)" (close)="capturesOpen = false">
+        <div class="captures-content">
+            <header class="captures-heading">
+                <h2 id="captures-title">Captured pieces</h2>
+                <button class="btn btn-default" autofocus (click)="closeCaptures()" aria-label="Close captured pieces">×</button>
+            </header>
+            @if (!gameService.hasMoveHistory) {
+            <p>Capture history is unavailable for this position.</p>
+            } @else {
+            <section aria-labelledby="white-captures-title">
+                <h3 id="white-captures-title">Captured by White</h3>
+                <p class="capture-player">{{ whitePlayerName }}</p>
+                <ul class="captured-pieces">
+                    @for (piece of capturedByWhite; track $index) {
+                    <li [attr.aria-label]="'Black ' + pieceNames[piece.type]" [attr.title]="'Black ' + pieceNames[piece.type]">
+                        <span class="black-piece" aria-hidden="true">{{ getPieceIcon(piece) }}</span>
+                    </li>
+                    } @empty {
+                    <li class="captures-empty">No captures yet.</li>
+                    }
+                </ul>
+            </section>
+            <section aria-labelledby="black-captures-title">
+                <h3 id="black-captures-title">Captured by Black</h3>
+                <p class="capture-player">{{ blackPlayerName }}</p>
+                <ul class="captured-pieces">
+                    @for (piece of capturedByBlack; track $index) {
+                    <li [attr.aria-label]="'White ' + pieceNames[piece.type]" [attr.title]="'White ' + pieceNames[piece.type]">
+                        <span class="white-piece" aria-hidden="true">{{ getPieceIcon(piece) }}</span>
+                    </li>
+                    } @empty {
+                    <li class="captures-empty">No captures yet.</li>
+                    }
+                </ul>
+            </section>
+            }
+        </div>
+    </dialog>
 
     <!-- Promotion Modal -->
     @if (promotionMove) {
     <div class="modal-overlay">
         <div class="modal">
             <h3>Promote Pawn</h3>
-            <div class="promotion-pieces">
+            <fieldset class="promotion-pieces" [disabled]="gameService.isSubmitting" aria-label="Choose promotion piece">
                 <button class="btn btn-lg" (click)="onPromotionSelect('q')">♕</button>
                 <button class="btn btn-lg" (click)="onPromotionSelect('r')">♖</button>
                 <button class="btn btn-lg" (click)="onPromotionSelect('b')">♗</button>
                 <button class="btn btn-lg" (click)="onPromotionSelect('n')">♘</button>
-            </div>
-            <button class="btn btn-default" (click)="cancelPromotion()">Cancel</button>
+            </fieldset>
+            <button class="btn btn-default" (click)="cancelPromotion()" [disabled]="gameService.isSubmitting">Cancel</button>
         </div>
     </div>
     }
